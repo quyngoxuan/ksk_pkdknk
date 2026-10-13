@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Nhập danh sách hành chính · KSK</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="menu.css" rel="stylesheet" />
+    <style>
+      body {
+        background: #f4f7f6;
+      }
+      .shell {
+        max-width: 1320px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #064b33, #158154);
+        color: #fff;
+      }
+      .card {
+        border: 0;
+        box-shadow: 0 0.2rem 1.2rem rgba(18, 65, 45, 0.08);
+      }
+      .table-wrap {
+        max-height: 470px;
+        overflow: auto;
+      }
+      .required::after {
+        content: " *";
+        color: #b42318;
+      }
+      #alert-area {
+        position: sticky;
+        top: 0.75rem;
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-app-menu="import"></div>
+    <header class="hero py-4 mb-4">
+      <div
+        class="container shell d-flex justify-content-between align-items-center gap-3"
+      >
+        <div>
+          <div class="small opacity-75">Khám sức khỏe · Mẫu 03</div>
+          <h1 class="h3 mb-0">Nhập thông tin hành chính từ Excel</h1>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-light" href="Mau_Excel_ThongTinHanhChinh_LienThong_KSK.xlsx" download>Tải mẫu Excel</a>
+          <a class="btn btn-light" href="list.html">Danh sách đã nhập</a>
+        </div>
+      </div>
+    </header>
+    <main class="container shell pb-5">
+      <div id="alert-area" aria-live="polite"></div>
+      <section class="card mb-4">
+        <div class="card-body p-md-4">
+          <h2 class="h5 text-success mb-3">1. Chọn tệp Excel</h2>
+          <div class="row g-3 align-items-end">
+            <div class="col-md-7">
+              <label class="form-label required" for="excel-file"
+                >Tệp danh sách (.xls, .xlsx)</label
+              ><input
+                id="excel-file"
+                class="form-control"
+                type="file"
+                accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="sheet-name">Trang tính</label
+              ><select id="sheet-name" class="form-select" disabled></select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="header-row">Dòng tiêu đề</label
+              ><input
+                id="header-row"
+                class="form-control"
+                type="number"
+                min="1"
+                value="1"
+                disabled
+              />
+            </div>
+          </div>
+          <p class="small text-secondary mb-0 mt-3">
+            Tệp được đọc trên trình duyệt. Chưa có dữ liệu nào được gửi lên máy
+            chủ cho đến khi bạn bấm “Nhập dữ liệu”.
+          </p>
+        </div>
+      </section>
+      <section id="company-card" class="card mb-4 d-none">
+        <div class="card-body p-md-4">
+          <h2 class="h5 text-success mb-1">2. Chọn đơn vị</h2>
+          <p class="small text-secondary">MST của đơn vị được chọn sẽ được ghi cho toàn bộ bệnh nhân trong lần nhập này.</p>
+          <div class="alert alert-warning py-2 small mb-3">
+            Khi xác nhận nhập, danh sách và dữ liệu khám hiện có của đợt đã chọn sẽ được thay thế bằng file mới. Hồ sơ gốc và dữ liệu ở đợt khám khác được giữ lại. Nếu file có lỗi, dữ liệu cũ sẽ không bị thay đổi.
+          </div>
+          <div class="row g-3"><div class="col-md-8"><label for="company-select" class="form-label required">Đơn vị</label><select id="company-select" class="form-select"><option value="">-- Chọn đơn vị --</option></select></div><div class="col-md-4"><label for="company-mst" class="form-label">Mã số thuế</label><input id="company-mst" class="form-control" readonly></div></div>
+          <div id="company-help" class="small text-secondary mt-2"></div>
+          <hr class="my-4">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-8">
+              <label for="campaign-select" class="form-label required">Đợt khám</label>
+              <select id="campaign-select" class="form-select" disabled><option value="">-- Chọn đơn vị trước --</option></select>
+              <div id="campaign-help" class="form-text">Mỗi đợt khám thuộc một đơn vị; dữ liệu nhập sẽ được gán theo cặp đơn vị – đợt khám.</div>
+            </div>
+            <div class="col-md-4">
+              <a id="campaign-manage" class="btn btn-outline-success w-100" href="listCampaign.html" target="_blank">Quản lý đợt khám</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="mapping-card" class="card mb-4 d-none">
+        <div class="card-body p-md-4">
+          <h2 class="h5 text-success mb-1">2. Ánh xạ cột Excel</h2>
+          <p class="small text-secondary">
+            Hệ thống tự nhận diện theo tên cột. Hãy điều chỉnh nếu cần; Họ và
+            tên là trường bắt buộc.
+          </p>
+          <div id="mapping-fields" class="row g-3"></div>
+        </div>
+      </section>
+      <section id="preview-card" class="card d-none">
+        <div class="card-body p-md-4">
+          <div
+            class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"
+          >
+            <div>
+              <h2 class="h5 text-success mb-0">3. Xem trước và nhập dữ liệu</h2>
+              <span id="row-count" class="small text-secondary"></span>
+            </div>
+            <button id="import-button" class="btn btn-success" type="button">
+              Nhập dữ liệu hành chính
+            </button>
+          </div>
+          <div class="table-wrap border rounded">
+            <table class="table table-sm table-striped mb-0">
+              <thead id="preview-head" class="table-success sticky-top"></thead>
+              <tbody id="preview-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script>
+      const savedApiBaseUrl = localStorage.getItem("ksk_api_base_url");
+      let useSavedApiBaseUrl = Boolean(savedApiBaseUrl);
+      if (savedApiBaseUrl) {
+        try {
+          const savedApiUrl = new URL(savedApiBaseUrl, location.href);
+          const savedHostIsLocal = ["localhost", "127.0.0.1", "::1"].includes(savedApiUrl.hostname);
+          const pageHostIsLocal = ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
+          if ((savedHostIsLocal && !pageHostIsLocal) || (location.protocol === "https:" && savedApiUrl.protocol !== "https:")) {
+            useSavedApiBaseUrl = false;
+          }
+        } catch {
+          useSavedApiBaseUrl = false;
+        }
+      }
+      const API_BASE_URL = useSavedApiBaseUrl
+        ? savedApiBaseUrl.replace(/\/$/, "")
+        : `${location.origin}/api/v1`;
+      const fields = [
+        ["shs", "SHS", false, ["shs", "so ho so", "so hs"]],
+        [
+          "full_name",
+          "Họ và tên",
+          true,
+          [
+            "ho ten",
+            "ho va ten",
+            "ten hoc sinh",
+            "ho ten hoc sinh",
+            "full name",
+          ],
+        ],
+        ["gender", "Giới tính", false, ["gioi tinh", "gioi", "sex", "gender"]],
+        [
+          "date_of_birth",
+          "Ngày sinh",
+          false,
+          ["ngay sinh", "ngay thang nam sinh", "ngay thang", "dob", "birth"],
+        ],
+        [
+          "phone",
+          "Điện thoại",
+          false,
+          ["dien thoai", "so dien thoai", "so dt", "sdt", "phone"],
+        ],
+        [
+          "identity_number",
+          "CCCD/Hộ chiếu/Mã định danh",
+          false,
+          ["cccd", "cmnd", "so cccd", "ho chieu", "ma dinh danh"],
+        ],
+        ["identity_issue_date", "Ngày cấp CCCD", false, ["ngay cap", "cap ngay"]],
+        ["identity_issue_place", "Nơi cấp CCCD", false, ["noi cap"]],
+        ["ethnicity", "Dân tộc", false, ["dan toc", "ten dan toc", "ethnicity name"]],
+        ["ethnicity_code", "Mã dân tộc", false, ["ma dan toc", "ethnicity code"]],
+        ["blood_group", "Nhóm máu", false, ["nhom mau", "blood"]],
+        ["province", "Tỉnh/Thành", false, ["tinh thanh", "tinh thanh pho", "province", "city"]],
+        ["province_code", "Mã tỉnh", false, ["ma tinh", "province code"]],
+        ["ward", "Phường/Xã", false, ["phuong xa", "ward", "commune"]],
+        ["ward_code", "Mã xã", false, ["ma xa", "ma phuong xa", "ward code"]],
+        [
+          "address_detail",
+          "Số nhà/Thôn/Xóm",
+          false,
+          ["dia chi", "so nha", "thon", "xom", "cho o", "cho o hien tai"],
+        ],
+        ["occupation", "Nghề nghiệp", false, ["nghe nghiep", "occupation name"]],
+        ["occupation_code", "Mã nghề nghiệp", false, ["ma nghe nghiep", "occupation code"]],
+        [
+          "workplace",
+          "Nơi làm việc, học tập",
+          false,
+          ["noi lam viec", "noi hoc", "lop", "truong", "school"],
+        ],
+      ];
+      let workbook,
+        rawRows = [],
+        headers = [],
+        mapping = {};
+      let companies = [];
+      let campaigns = [];
+      const el = (id) => document.getElementById(id);
+      const normalize = (value) =>
+        String(value ?? "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/đ/g, "d")
+          .replace(/[^a-z0-9]+/g, " ")
+          .trim();
+      function alertMessage(message, type = "success") {
+        el("alert-area").innerHTML =
+          `<div class="alert alert-${type} alert-dismissible fade show shadow-sm"><span>${message}</span><button class="btn-close" type="button" data-bs-dismiss="alert"></button></div>`;
+      }
+      function findHeaderRow(rows) {
+        const index = rows.findIndex((row) =>
+          row.some((cell) =>
+            ["ho ten", "ten hoc sinh", "full name"].some((alias) =>
+              normalize(cell).includes(alias),
+            ),
+          ),
+        );
+        return index >= 0 ? index : 0;
+      }
+      function loadSheet() {
+        const sheet = workbook.Sheets[el("sheet-name").value];
+        rawRows = XLSX.utils.sheet_to_json(sheet, {
+          header: 1,
+          defval: "",
+          raw: false,
+        });
+        const found = findHeaderRow(rawRows);
+        el("header-row").value = found + 1;
+        buildPreview();
+        loadCompanies();
+      }
+      async function loadCompanies() {
+        const select = el("company-select");
+        select.innerHTML = '<option value="">Đang tải danh sách đơn vị…</option>';
+        try {
+          const response = await fetch(`${API_BASE_URL}/companies?limit=500`);
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(data.detail || `Lỗi API (${response.status})`);
+          if (!Array.isArray(data)) throw new Error("API did not return a company list.");
+          companies = data;
+          select.innerHTML = '<option value="">-- Chọn đơn vị --</option>' + data.map(company => `<option value="${company.company_id}">${company.name}${company.mst ? ` — MST: ${company.mst}` : ''}</option>`).join('');
+          el("company-help").innerHTML = data.length ? `Đã tải ${data.length} đơn vị. <a href="editCompany.html" target="_blank">Thêm đơn vị mới</a>` : 'Chưa có đơn vị. <a href="editCompany.html" target="_blank">Thêm đơn vị mới</a>, sau đó chọn lại tệp Excel.';
+        } catch (error) {
+          select.innerHTML = '<option value="">Không tải được danh sách đơn vị</option>';
+          el("company-help").textContent = `Lỗi: ${error.message}`;
+        }
+        el("company-card").classList.remove("d-none");
+      }
+      async function loadCampaigns(companyId) {
+        const select = el("campaign-select");
+        campaigns = [];
+        select.disabled = true;
+        select.innerHTML = companyId
+          ? '<option value="">Đang tải danh sách đợt khám…</option>'
+          : '<option value="">-- Chọn đơn vị trước --</option>';
+        el("campaign-manage").href = companyId
+          ? `listCampaign.html?CompanyId=${encodeURIComponent(companyId)}`
+          : "listCampaign.html";
+        if (!companyId) return;
+        try {
+          const response = await fetch(`${API_BASE_URL}/exam-campaigns?company_id=${encodeURIComponent(companyId)}&active_only=true`);
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.detail || `Lỗi API (${response.status})`);
+          campaigns = data;
+          select.innerHTML = '<option value="">-- Chọn đợt khám --</option>' + data.map(campaign => {
+            const end = campaign.end_date ? ` đến ${campaign.end_date.split("-").reverse().join("/")}` : "";
+            return `<option value="${campaign.campaign_id}">${campaign.campaign_name} (${campaign.start_date.split("-").reverse().join("/")}${end})</option>`;
+          }).join("");
+          select.disabled = false;
+          el("campaign-help").textContent = data.length
+            ? `Đã tải ${data.length} đợt khám đang sử dụng cho đơn vị này.`
+            : "Đơn vị này chưa có đợt khám. Hãy bấm Quản lý đợt khám để tạo mới.";
+        } catch (error) {
+          select.innerHTML = '<option value="">Không tải được đợt khám</option>';
+          el("campaign-help").textContent = `Lỗi: ${error.message}`;
+        }
+      }
+      function buildPreview() {
+        const headerIndex = Math.max(
+          0,
+          Number(el("header-row").value || 1) - 1,
+        );
+        headers = (rawRows[headerIndex] || []).map((h, i) =>
+          String(h || `Cột ${i + 1}`).trim(),
+        );
+        const dataRows = rawRows
+          .slice(headerIndex + 1)
+          .filter((row) => row.some((cell) => String(cell).trim()));
+        mapping = Object.fromEntries(
+          fields.map(([key, , , aliases]) => {
+            const exactMatch = headers.findIndex((header) =>
+              aliases.some((alias) => normalize(header) === alias),
+            );
+            const match = exactMatch >= 0 ? exactMatch : headers.findIndex((header) =>
+              aliases.some((alias) => normalize(header).includes(alias)),
+            );
+            return [key, match >= 0 ? String(match) : ""];
+          }),
+        );
+        renderMapping();
+        renderPreview(dataRows);
+        el("mapping-card").classList.remove("d-none");
+        el("preview-card").classList.remove("d-none");
+      }
+      function renderMapping() {
+        el("mapping-fields").innerHTML = fields
+          .map(
+            ([key, label, required]) =>
+              `<div class="col-md-4"><label class="form-label ${required ? "required" : ""}">${label}</label><select class="form-select mapping" data-field="${key}"><option value="">-- Không nhập --</option>${headers.map((header, index) => `<option value="${index}" ${mapping[key] === String(index) ? "selected" : ""}>${header || `Cột ${index + 1}`}</option>`).join("")}</select></div>`,
+          )
+          .join("");
+        document.querySelectorAll(".mapping").forEach((input) =>
+          input.addEventListener("change", (e) => {
+            mapping[e.target.dataset.field] = e.target.value;
+            renderPreview(
+              rawRows
+                .slice(Math.max(0, Number(el("header-row").value || 1)))
+                .filter((row) => row.some((cell) => String(cell).trim())),
+            );
+          }),
+        );
+      }
+      function renderPreview(dataRows) {
+        const selected = fields.filter(([key]) => mapping[key] !== "");
+        el("preview-head").innerHTML =
+          `<tr><th>#</th>${selected.map(([, label]) => `<th>${label}</th>`).join("")}</tr>`;
+        el("preview-body").innerHTML = dataRows
+          .slice(0, 50)
+          .map(
+            (row, index) =>
+              `<tr><td>${index + 1}</td>${selected.map(([key]) => `<td>${row[Number(mapping[key])] ?? ""}</td>`).join("")}</tr>`,
+          )
+          .join("");
+        el("row-count").textContent =
+          `${dataRows.length} dòng hợp lệ · hiển thị tối đa 50 dòng xem trước`;
+      }
+      function isoDate(value) {
+        if (value === null || value === undefined || value === "") return null;
+        if (value instanceof Date && !Number.isNaN(value))
+          return value.toISOString().slice(0, 10);
+        const text = String(value).trim();
+        const dmy = text.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})$/);
+        if (dmy) {
+          const year = dmy[3].length === 2 ? `20${dmy[3]}` : dmy[3];
+          return `${year}-${dmy[2].padStart(2, "0")}-${dmy[1].padStart(2, "0")}`;
+        }
+        return /^\d{4}-\d{2}-\d{2}$/.test(text) ? text : null;
+      }
+      function makePatients() {
+        const start = Math.max(0, Number(el("header-row").value || 1));
+        return rawRows
+          .slice(start)
+          .filter((row) => row.some((cell) => String(cell).trim()))
+          .map((row) => {
+            const item = {};
+            fields.forEach(([key]) => {
+              if (mapping[key] !== "")
+                item[key] =
+                  String(row[Number(mapping[key])] ?? "").trim() || null;
+            });
+            item.full_name = item.full_name || "";
+            const company = companies.find(x => String(x.company_id) === el("company-select").value);
+            item.mst = company?.mst || null;
+            item.gender =
+              ["1", "nam", "male"].includes(normalize(item.gender))
+                ? 1
+                : ["2", "nu", "female"].includes(normalize(item.gender))
+                  ? 2
+                  : null;
+            item.date_of_birth = isoDate(item.date_of_birth);
+            item.identity_issue_date = isoDate(item.identity_issue_date);
+            return item;
+          });
+      }
+      el("excel-file").addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        try {
+          workbook = XLSX.read(await file.arrayBuffer(), {
+            type: "array",
+            cellDates: true,
+          });
+          el("sheet-name").innerHTML = workbook.SheetNames.map(
+            (name) => `<option value="${name}">${name}</option>`,
+          ).join("");
+          el("sheet-name").disabled = false;
+          el("header-row").disabled = false;
+          loadSheet();
+        } catch (error) {
+          alertMessage(`Không thể đọc tệp: ${error.message}`, "danger");
+        }
+      });
+      el("sheet-name").addEventListener("change", loadSheet);
+      el("header-row").addEventListener("change", buildPreview);
+      el("company-select").addEventListener("change", (event) => {
+        const company = companies.find(x => String(x.company_id) === event.target.value);
+        el("company-mst").value = company?.mst || "";
+        loadCampaigns(event.target.value);
+      });
+      el("import-button").addEventListener("click", async () => {
+        if (!el("company-select").value) {
+          alertMessage("Hãy chọn đơn vị trước khi nhập dữ liệu.", "warning");
+          return;
+        }
+        if (!el("campaign-select").value) {
+          alertMessage("Hãy chọn đợt khám trước khi nhập dữ liệu.", "warning");
+          return;
+        }
+        if (mapping.full_name === "") {
+          alertMessage("Hãy chọn cột Họ và tên trước khi nhập.", "warning");
+          return;
+        }
+        const patients = makePatients();
+        const invalid = patients.findIndex((item) => !item.full_name);
+        if (invalid >= 0) {
+          alertMessage(
+            `Dòng dữ liệu ${invalid + 1} không có họ và tên.`,
+            "warning",
+          );
+          return;
+        }
+        const campaignName = el("campaign-select").selectedOptions[0]?.textContent?.trim() || "đợt đã chọn";
+        if (!window.confirm(`Thay thế toàn bộ danh sách của ${campaignName}? Các lần khám hiện có trong đợt này sẽ bị xóa khi nhập thành công. Hồ sơ gốc và đợt khác được giữ lại.`)) {
+          return;
+        }
+        const button = el("import-button");
+        button.disabled = true;
+        button.innerHTML =
+          '<span class="spinner-border spinner-border-sm me-1"></span>Đang nhập';
+        try {
+          const response = await fetch(`${API_BASE_URL}/patients/import`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              company_id: Number(el("company-select").value),
+              campaign_id: Number(el("campaign-select").value),
+              replace_campaign: true,
+              patients,
+            }),
+          });
+          const result = await response.json();
+          if (!response.ok) {
+            const detail = result.detail;
+            const message = typeof detail === "string" ? detail : detail?.message || `Lỗi API (${response.status})`;
+            throw new Error(message);
+          }
+          const issueText = result.failed
+            ? `<br><small>${result.failed} dòng không nhập được: ${result.issues
+                .slice(0, 5)
+                .map((x) => `dòng ${x.row_number} (${x.message})`)
+                .join("; ")}</small>`
+            : "";
+          const importSummary = `Đã tạo ${result.inserted} bệnh nhân mới, gán ${result.linked} bệnh nhân vào đợt khám${result.skipped ? `; ${result.skipped} bệnh nhân đã có trong đợt` : ""}.`;
+          alertMessage(
+            `${importSummary}${issueText}`,
+            result.failed ? "warning" : "success",
+          );
+          if (result.inserted + result.linked > 0) {
+            const mst = el("company-mst").value.trim();
+            const campaignId = el("campaign-select").value;
+            setTimeout(() => { window.location.href = `list.html?MST=${encodeURIComponent(mst)}&CampaignId=${encodeURIComponent(campaignId)}`; }, 1500);
+          }
+        } catch (error) {
+          alertMessage(`Không thể nhập dữ liệu: ${error.message}`, "danger");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Nhập dữ liệu hành chính";
+        }
+      });
+    </script>
+    <script src="menu-loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

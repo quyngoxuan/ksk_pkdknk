@@ -1,0 +1,35 @@
+# Secrets, environments and runtime output
+KSK_API/.env
+KSK_API/.venv/
+**/__pycache__/
+*.py[cod]
+*.log
+**/bin/
+**/obj/
+**/publish/
+*.user
+*.suo
+*.ini
+
+# Local user data and deployment archives
+DaiHocLamNghiep/
+HOSTING_PKDKNK.COM/
+*.xlsx
+*.xls
+*.docx
+*.pdf
+*.zip
+*.rar
+
+# Private working notes
+porm.txt
+nhatky.txt
+bsKhai.txt
+bsPhuc.txt
+
+# Local IDE and operating-system files
+.vscode/
+.idea/
+*.tmp
+Thumbs.db
+Desktop.ini

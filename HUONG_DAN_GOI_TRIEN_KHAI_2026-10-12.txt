@@ -1,0 +1,26 @@
+GOI CAP NHAT TRIEN KHAI - 12/10/2026
+
+Thanh phan:
+- Cac trang HTML da thay doi: main.html, list.html, import.html, ksk-tu-du-18.html
+- API: KSK_API/app/main.py, models.py, schemas.py, word_export.py
+- Phu thuoc Python: KSK_API/requirements.txt (bao gom xlrd de doc Excel .xls)
+- Cong cu nap danh muc ICD-10: KSK_API/import_icd10_catalog.py
+- Cac script SQL cap nhat schema: allow_examdate_null.sql, deploy_ksk_schema.sql,
+  deploy_conclusion_icd10.sql, deploy_icd10_catalog.sql
+
+Chep cac file HTML vao thu muc web goc; chep cac file Python vao dung thu muc
+KSK_API/app va KSK_API. Sao luu truoc cac file hien tai tren may trien khai.
+
+Sau khi chep file, mo PowerShell tai thu muc KSK_API tren may trien khai va cai
+dependencies vao virtual environment cua ung dung:
+  .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Sau do khoi dong lai API. Khong can chay pip bang Python he thong.
+
+Chi chay cac script SQL phu hop voi schema tren may dich; khong can chay lai
+deploy_ksk_schema.sql neu cac bang da ton tai va da dung schema. Hai script
+deploy_conclusion_icd10.sql va deploy_icd10_catalog.sql chi tao cot/bang neu
+chua co. allow_examdate_null.sql cho phep ExamDate NULL va giu nguyen gia tri cu.
+
+Luu y: goi nay khong kem workbook danh muc ICD-10; import_icd10_catalog.py la
+tien ich nap khi da co workbook Excel danh muc chinh thuc. Cac file Excel co du
+lieu ho so benh nhan trong thu muc DaiHocLamNghiep khong duoc dong goi.

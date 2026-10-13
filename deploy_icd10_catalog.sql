@@ -1,0 +1,13 @@
+USE [PKNK_KSK];
+GO
+
+IF OBJECT_ID(N'dbo.Icd10Codes', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Icd10Codes (
+        Code VARCHAR(10) NOT NULL CONSTRAINT PK_Icd10Codes PRIMARY KEY,
+        NameVi NVARCHAR(500) NOT NULL,
+        Source VARCHAR(40) NOT NULL CONSTRAINT DF_Icd10Codes_Source DEFAULT 'TT06/2026/TT-BYT'
+    );
+    CREATE INDEX IX_Icd10Codes_NameVi ON dbo.Icd10Codes(NameVi);
+END;
+GO

@@ -1,0 +1,36 @@
+.app-menu {
+  display: flex;
+  align-items: center;
+  gap: .1rem;
+  flex-wrap: wrap;
+}
+
+.app-menu a {
+  color: #315560;
+  text-decoration: none;
+  font-size: .9rem;
+  font-weight: 650;
+  padding: .5rem .62rem;
+  border-radius: .45rem;
+  transition: color .15s, background .15s;
+}
+
+.app-menu a i {
+  color: #078473;
+  font-size: 1rem;
+  margin-right: .28rem;
+}
+
+.app-menu a:hover,
+.app-menu a.active {
+  color: #00695c;
+  background: #e3f3ef;
+}
+
+.app-menu a.active {
+  font-weight: 800;
+}
+
+.app-menu a.active i {
+  color: #00695c;
+}

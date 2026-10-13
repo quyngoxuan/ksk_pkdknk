@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cập nhật đợt khám</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="menu.css" rel="stylesheet">
+  <style>body{background:#f4f7f6}.shell{max-width:850px}.hero{background:linear-gradient(135deg,#064b33,#158154);color:#fff}.card{border:0;box-shadow:0 .2rem 1.2rem rgba(18,65,45,.08)}.required::after{content:' *';color:#b42318}</style>
+</head>
+<body>
+  <div data-app-menu="campaign"></div>
+  <header class="hero py-4 mb-4"><div class="container shell d-flex justify-content-between align-items-center gap-3"><div><div class="small opacity-75">Danh mục</div><h1 id="title" class="h3 mb-0">Thêm đợt khám</h1></div><a class="btn btn-light" href="listCampaign.html">Danh sách đợt khám</a></div></header>
+  <main class="container shell pb-5"><div id="notice"></div><section class="card"><div class="card-body p-md-4"><form id="form" class="row g-3">
+    <div class="col-12"><label for="company-id" class="form-label required">Đơn vị</label><select id="company-id" class="form-select" required><option value="">Đang tải đơn vị…</option></select></div>
+    <div class="col-12"><label for="campaign-name" class="form-label required">Tên đợt khám</label><input id="campaign-name" class="form-control" maxlength="300" required placeholder="Ví dụ: Khám sức khỏe định kỳ năm 2026"></div>
+    <div class="col-md-6"><label for="start-date" class="form-label required">Ngày bắt đầu</label><input id="start-date" type="date" class="form-control" required></div>
+    <div class="col-md-6"><label for="end-date" class="form-label">Ngày kết thúc</label><input id="end-date" type="date" class="form-control"></div>
+    <div class="col-12"><label for="description" class="form-label">Mô tả</label><textarea id="description" class="form-control" rows="3" maxlength="1000"></textarea></div>
+    <div class="col-12"><div class="form-check"><input id="is-active" class="form-check-input" type="checkbox" checked><label class="form-check-label" for="is-active">Đang sử dụng</label></div></div>
+    <div class="col-12 d-flex gap-2"><button class="btn btn-success" type="submit">Lưu đợt khám</button><a id="cancel" class="btn btn-outline-secondary" href="listCampaign.html">Hủy</a></div>
+  </form></div></section></main>
+  <script src="menu-loader.js"></script>
+  <script>
+    const API = `${location.protocol === 'http:' ? location.origin : 'http://localhost:5500'}/api/v1`;
+    const el = id => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+    const campaignId = params.get('CampaignId');
+    const companyId = params.get('CompanyId');
+    const esc = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+    const notify = (message, type='success') => el('notice').innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+    async function request(path, options={}) { const response = await fetch(`${API}${path}`, { headers:{'Content-Type':'application/json'}, ...options }); const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.detail || `Lỗi API (${response.status})`); return data; }
+    async function load() {
+      const companies = await request('/companies?limit=500');
+      el('company-id').innerHTML = '<option value="">-- Chọn đơn vị --</option>' + companies.map(item => `<option value="${item.company_id}">${esc(item.name)}${item.mst ? ` — MST: ${esc(item.mst)}` : ''}</option>`).join('');
+      if (campaignId) {
+        const campaign = await request(`/exam-campaigns/${encodeURIComponent(campaignId)}`);
+        el('title').textContent = 'Cập nhật đợt khám';
+        el('company-id').value = campaign.company_id;
+        el('company-id').disabled = true;
+        el('campaign-name').value = campaign.campaign_name;
+        el('start-date').value = campaign.start_date;
+        el('end-date').value = campaign.end_date || '';
+        el('description').value = campaign.description || '';
+        el('is-active').checked = campaign.is_active;
+        el('cancel').href = `listCampaign.html?CompanyId=${campaign.company_id}`;
+      } else if (companyId) {
+        el('company-id').value = companyId;
+        el('cancel').href = `listCampaign.html?CompanyId=${encodeURIComponent(companyId)}`;
+      }
+    }
+    el('form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const startDate = el('start-date').value;
+      const endDate = el('end-date').value || null;
+      if (endDate && endDate < startDate) { notify('Ngày kết thúc không được trước ngày bắt đầu.', 'warning'); return; }
+      const body = { campaign_name: el('campaign-name').value.trim(), start_date: startDate, end_date: endDate, description: el('description').value.trim() || null, is_active: el('is-active').checked };
+      if (!campaignId) body.company_id = Number(el('company-id').value);
+      try {
+        const saved = await request(campaignId ? `/exam-campaigns/${encodeURIComponent(campaignId)}` : '/exam-campaigns', { method: campaignId ? 'PATCH' : 'POST', body: JSON.stringify(body) });
+        notify('Đã lưu đợt khám. Đang chuyển về danh sách…');
+        setTimeout(() => { location.href = `listCampaign.html?CompanyId=${saved.company_id}`; }, 800);
+      } catch (error) { notify(esc(error.message), 'danger'); }
+    });
+    load().catch(error => notify(esc(error.message), 'danger'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,1077 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DANH SÁCH HỒ SƠ</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link href="menu.css" rel="stylesheet" />
+    <style>
+      body {
+        background: #f4f7f6;
+      }
+      .shell {
+        max-width: 1440px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #064b33, #158154);
+        color: #fff;
+      }
+      #page-heading {
+        font-size: 1.2rem;
+      }
+      #page-subtitle,
+      #page-heading {
+        position: relative;
+        top: -14px;
+      }
+      .hero-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+      .hero-heading {
+        flex: 1 1 0;
+        min-width: 0;
+        text-align: center;
+      }
+      #page-heading {
+        overflow-wrap: anywhere;
+        line-height: 1.2;
+      }
+      .hero-actions {
+        flex: 0 0 auto;
+        max-width: 100%;
+        justify-content: flex-end;
+      }
+      @media (max-width: 991.98px) {
+        .hero-inner {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .hero-heading {
+          width: 100%;
+        }
+        .hero-actions {
+          justify-content: center;
+        }
+      }
+      .card {
+        border: 0;
+        box-shadow: 0 0.2rem 1.2rem rgba(18, 65, 45, 0.08);
+      }
+      .table-wrap {
+        max-height: 650px;
+        overflow: auto;
+        border-color: #d7e2df !important;
+      }
+      #patient-list-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        table-layout: fixed;
+        min-width: 1280px;
+      }
+      /* Give the patient's name more room while keeping the address compact. */
+      #patient-list-table th:nth-child(1),
+      #patient-list-table td:nth-child(1) {
+        width: 40px;
+        text-align: center;
+      }
+      #patient-list-table th:nth-child(2),
+      #patient-list-table td:nth-child(2) {
+        width: 235px;
+      }
+      #patient-list-table th:nth-child(3),
+      #patient-list-table td:nth-child(3) {
+        width: 50px;
+        text-align: center;
+      }
+      #patient-list-table th:nth-child(4),
+      #patient-list-table td:nth-child(4) {
+        width: 100px;
+        text-align: center;
+      }
+      #patient-list-table th:nth-child(5),
+      #patient-list-table td:nth-child(5) {
+        width: 120px;
+        text-align: center;
+      }
+      #patient-list-table th:nth-child(6),
+      #patient-list-table td:nth-child(6) {
+        width: 100px;
+        text-align: center;
+      }
+      #patient-list-table th:nth-child(8),
+      #patient-list-table td:nth-child(8) {
+        width: 100px;
+        text-align: center;
+      }
+
+      #patient-list-table th:nth-child(9),
+      #patient-list-table td:nth-child(9) {
+        width: 40px;
+        text-align: center;
+      }
+
+      #patient-list-table th:nth-child(7),
+      #patient-list-table td:nth-child(7) {
+        width: 340px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+      #patient-list-table > :not(caption) > * > * {
+        border-right: 1px solid #e2e9e7;
+        border-bottom: 1px solid #e2e9e7;
+      }
+      #patient-list-table > :not(caption) > * > *:first-child {
+        border-left: 1px solid #e2e9e7;
+      }
+      #patient-list-table thead th {
+        border-top: 1px solid #e2e9e7;
+      }
+      #patient-list-table tbody tr:hover > * {
+        background-color: #f5faf8;
+      }
+      .filter-row {
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.15rem;
+      }
+      .filter-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .filter-row > * {
+        flex: 0 0 auto;
+      }
+      .barcode-filter {
+        width: 270px;
+      }
+      .keyword-filter {
+        width: 250px;
+      }
+      .company-filter,
+      .campaign-filter {
+        width: 240px;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-app-menu="records"></div>
+    <header class="hero py-4 mb-4">
+      <div class="container shell hero-inner">
+        <div class="hero-heading">
+          <div id="page-subtitle" class="small opacity-75"></div>
+          <h1 id="page-heading" class="h3 mb-0">DANH SÁCH HỒ SƠ</h1>
+        </div>
+        <div class="hero-actions d-flex flex-wrap gap-2">
+          <div class="barcode-filter">
+            <label class="form-label visually-hidden" for="barcode-search"
+              >Quét mã hồ sơ</label
+            >
+            <div class="input-group">
+              <input
+                id="barcode-search"
+                class="form-control"
+                autocomplete="off"
+                placeholder="Quét mã hồ sơ"
+              /><button
+                id="barcode-button"
+                class="btn btn-dark text-nowrap"
+                type="button"
+              >
+                Mở hồ sơ
+              </button>
+            </div>
+          </div>
+          <a class="btn btn-light" href="import.html">Nhập từ Excel</a>
+          <button
+            id="import-exam-results-button"
+            class="btn btn-warning text-nowrap"
+            type="button"
+          >
+            Nhập KQ từ Excel
+          </button>
+          <input
+            id="import-exam-results-file"
+            type="file"
+            accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            hidden
+          />
+
+          <button
+            id="add-patient-button"
+            class="btn btn-warning"
+            type="button"
+            disabled
+          >
+            Thêm bệnh nhân mới
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="container shell pb-5">
+      <section class="card">
+        <div class="card-body p-md-4">
+          <div class="filter-toolbar mb-3">
+            <div class="filter-row">
+              <div class="keyword-filter">
+                <input
+                  id="search"
+                  class="form-control"
+                  placeholder="Tìm tên, CCCD hoặc điện thoại"
+                />
+              </div>
+              <div class="company-filter">
+                <label class="form-label visually-hidden" for="company-filter"
+                  >Đơn vị</label
+                ><select id="company-filter" class="form-select">
+                  <option value="">Tất cả đơn vị</option>
+                </select>
+              </div>
+              <div class="campaign-filter">
+                <label class="form-label visually-hidden" for="campaign-filter"
+                  >Gói khám / đợt khám</label
+                ><select id="campaign-filter" class="form-select" disabled>
+                  <option value="">Chọn đơn vị để lọc gói khám</option>
+                </select>
+              </div>
+              <button
+                id="search-button"
+                class="btn btn-success text-nowrap"
+                type="button"
+              >
+                Lọc
+              </button>
+              <select
+                id="export-format"
+                class="form-select text-nowrap"
+                style="width: 190px"
+                aria-label="Chọn loại file xuất"
+              >
+                <option value="">Chọn loại Export</option>
+                <option value="excel">Excel- Danh sách</option>
+                <option value="template">Excel-Nhập Dữ Liệu</option>
+                <option value="word-all">Mẫu KSK không có ảnh</option>
+                <option value="word-photo-all">Mẫu KSK có ảnh</option>
+                <option value="a4-all">Phiếu A4</option>
+              </select>
+              <button
+                id="export-button"
+                class="btn btn-outline-success text-nowrap"
+                type="button"
+                disabled
+              >
+                <i class="bi bi-download"></i> Export
+              </button>
+              <span
+                id="export-loading"
+                class="spinner-border spinner-border-sm text-success d-none"
+                role="status"
+                aria-label="Đang xuất file"
+              ></span>
+              <button
+                id="delete-campaign-button"
+                class="btn btn-danger text-nowrap"
+                type="button"
+                disabled
+                hidden
+              >
+                Xóa
+              </button>
+            </div>
+          </div>
+          <div id="status" class="small text-secondary mb-3"></div>
+          <div class="d-flex justify-content-end align-items-center gap-3 mb-2">
+            <span
+              id="patient-count"
+              class="small text-secondary text-nowrap"
+            ></span>
+            <label class="small text-secondary text-nowrap" for="page-size-top"
+              >Số dòng/trang</label
+            >
+            <select
+              id="page-size-top"
+              class="form-select form-select-sm"
+              style="width: auto"
+            >
+              <option value="25">25</option>
+              <option value="50" selected>50</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+            </select>
+            <nav aria-label="Phân trang phía trên">
+              <ul class="pagination pagination-sm mb-0">
+                <li class="page-item">
+                  <button
+                    id="previous-page-top"
+                    class="page-link"
+                    type="button"
+                  >
+                    Trước
+                  </button>
+                </li>
+                <li class="page-item disabled">
+                  <span id="page-indicator-top" class="page-link"></span>
+                </li>
+                <li class="page-item">
+                  <button id="next-page-top" class="page-link" type="button">
+                    Sau
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="table-wrap border rounded">
+            <table
+              id="patient-list-table"
+              class="table table-hover table-sm mb-0"
+            >
+              <thead class="table-success sticky-top">
+                <tr>
+                  <th>#</th>
+                  <th>Họ và tên</th>
+                  <th>GT</th>
+                  <th>Ngày sinh</th>
+                  <th>CCCD</th>
+                  <th>Điện thoại</th>
+                  <th>Địa chỉ</th>
+                  <th>Ngày khám</th>
+                  <th>SHS</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="patient-list"></tbody>
+            </table>
+          </div>
+          <div
+            class="d-flex flex-wrap align-items-center justify-content-between gap-3 mt-3"
+          >
+            <div id="pagination-info" class="small text-secondary"></div>
+            <div class="d-flex align-items-center gap-3">
+              <label class="small text-secondary text-nowrap" for="page-size"
+                >Số dòng/trang</label
+              >
+              <select
+                id="page-size"
+                class="form-select form-select-sm"
+                style="width: auto"
+              >
+                <option value="25">25</option>
+                <option value="50" selected>50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+              </select>
+              <nav aria-label="Phân trang danh sách hồ sơ">
+                <ul class="pagination pagination-sm mb-0">
+                  <li class="page-item">
+                    <button id="previous-page" class="page-link" type="button">
+                      Trước
+                    </button>
+                  </li>
+                  <li class="page-item disabled">
+                    <span id="page-indicator" class="page-link"></span>
+                  </li>
+                  <li class="page-item">
+                    <button id="next-page" class="page-link" type="button">
+                      Sau
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="menu-loader.js"></script>
+    <script>
+      const API = `${location.protocol === "http:" ? location.origin : "http://localhost:5500"}/api/v1`;
+      const body = document.getElementById("patient-list");
+      const status = document.getElementById("status");
+      const patientCount = document.getElementById("patient-count");
+      const companyFilter = document.getElementById("company-filter");
+      const campaignFilter = document.getElementById("campaign-filter");
+      const addPatientButton = document.getElementById("add-patient-button");
+      const exportFormat = document.getElementById("export-format");
+      const exportButton = document.getElementById("export-button");
+      const exportLoading = document.getElementById("export-loading");
+      const importExamResultsButton = document.getElementById(
+        "import-exam-results-button",
+      );
+      const importExamResultsFile = document.getElementById(
+        "import-exam-results-file",
+      );
+      let exportInProgress = false;
+      const deleteCampaignButton = document.getElementById(
+        "delete-campaign-button",
+      );
+      const paginationInfo = document.getElementById("pagination-info");
+      const pageSizeSelect = document.getElementById("page-size");
+      const pageSizeTopSelect = document.getElementById("page-size-top");
+      const previousPageButton = document.getElementById("previous-page");
+      const nextPageButton = document.getElementById("next-page");
+      const pageIndicator = document.getElementById("page-indicator");
+      const previousPageTopButton =
+        document.getElementById("previous-page-top");
+      const nextPageTopButton = document.getElementById("next-page-top");
+      const pageIndicatorTop = document.getElementById("page-indicator-top");
+      const pageHeading = document.getElementById("page-heading");
+      const pageSubtitle = document.getElementById("page-subtitle");
+      let companies = [],
+        campaigns = [];
+      let currentPage = 1;
+      let pageSize = Number(pageSizeSelect.value);
+      let patientRowsCache = [];
+      let patientRowsCacheKey = "";
+      const esc = (value) =>
+        String(value ?? "").replace(
+          /[&<>'"]/g,
+          (char) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              "'": "&#039;",
+              '"': "&quot;",
+            })[char],
+        );
+      const date = (value) =>
+        value ? new Intl.DateTimeFormat("vi-VN").format(new Date(value)) : "";
+      function updatePageHeading() {
+        const company = companies.find(
+          (item) => item.mst === companyFilter.value,
+        );
+        const heading = company?.name || "DANH SÁCH HỒ SƠ";
+        pageHeading.textContent = heading;
+        pageSubtitle.textContent = company?.mst ? `MST: ${company.mst}` : "";
+        document.title = heading;
+      }
+      async function get(path) {
+        const response = await fetch(`${API}${path}`);
+        const body = await response.text();
+        let data = {};
+        try {
+          data = body ? JSON.parse(body) : {};
+        } catch (_) {
+          // Keep the raw response for non-JSON API errors.
+        }
+        if (!response.ok)
+          throw new Error(
+            data.detail || body || `Lỗi API (${response.status})`,
+          );
+        return data;
+      }
+      async function loadCompanies() {
+        try {
+          companies = await get("/companies?limit=500");
+          companyFilter.innerHTML =
+            '<option value="">Tất cả đơn vị</option>' +
+            companies
+              .filter((item) => item.mst)
+              .map(
+                (item) =>
+                  `<option value="${esc(item.mst)}">${esc(item.name)} — MST: ${esc(item.mst)}</option>`,
+              )
+              .join("");
+          const mst = new URLSearchParams(location.search).get("MST");
+          if (mst && companies.some((item) => item.mst === mst))
+            companyFilter.value = mst;
+          updatePageHeading();
+        } catch (error) {
+          companyFilter.innerHTML =
+            '<option value="">Không tải được đơn vị</option>';
+          status.textContent = error.message;
+        }
+      }
+      async function loadCampaigns(selectedCampaignId = null) {
+        const company = companies.find(
+          (item) => item.mst === companyFilter.value,
+        );
+        campaigns = [];
+        campaignFilter.disabled = true;
+        campaignFilter.innerHTML = company
+          ? '<option value="">Đang tải gói khám…</option>'
+          : '<option value="">Chọn đơn vị để lọc gói khám</option>';
+        if (!company) {
+          updateAddPatientButton();
+          return;
+        }
+        try {
+          campaigns = await get(
+            `/exam-campaigns?company_id=${encodeURIComponent(company.company_id)}`,
+          );
+          campaignFilter.innerHTML =
+            '<option value="">-- Chọn đợt khám --</option>' +
+            campaigns
+              .map(
+                (item) =>
+                  `<option value="${item.campaign_id}">${esc(item.campaign_name)} (${esc(item.start_date)}${item.end_date ? ` — ${esc(item.end_date)}` : ""})</option>`,
+              )
+              .join("");
+          campaignFilter.disabled = false;
+          if (
+            selectedCampaignId &&
+            campaigns.some(
+              (item) => String(item.campaign_id) === String(selectedCampaignId),
+            )
+          )
+            campaignFilter.value = String(selectedCampaignId);
+        } catch (error) {
+          campaignFilter.innerHTML =
+            '<option value="">Không tải được đợt khám</option>';
+          status.textContent = error.message;
+        } finally {
+          updateAddPatientButton();
+        }
+      }
+      function updateAddPatientButton() {
+        addPatientButton.disabled = !(
+          companyFilter.value && campaignFilter.value
+        );
+        addPatientButton.title = addPatientButton.disabled
+          ? "Chọn đơn vị và đợt khám trước."
+          : "Thêm bệnh nhân cho đơn vị và đợt khám đang chọn.";
+        deleteCampaignButton.disabled = !(
+          companyFilter.value && campaignFilter.value
+        );
+        exportFormat.disabled =
+          exportInProgress || !(companyFilter.value && campaignFilter.value);
+        exportButton.disabled =
+          exportInProgress ||
+          !(companyFilter.value && campaignFilter.value && exportFormat.value);
+        deleteCampaignButton.title = deleteCampaignButton.disabled
+          ? "Chọn đơn vị và đợt khám trước."
+          : "Xóa dữ liệu bệnh nhân của đợt khám đang chọn.";
+      }
+      function addPatient() {
+        if (!companyFilter.value || !campaignFilter.value) {
+          alert("Hãy chọn đơn vị và đợt khám trước.");
+          return;
+        }
+        const query = new URLSearchParams({
+          SHS: "0",
+          MST: companyFilter.value,
+          CampaignId: campaignFilter.value,
+        });
+        location.href = `ksk-tu-du-18.html?${query}`;
+      }
+      async function findByBarcode() {
+        const barcode = document.getElementById("barcode-search").value.trim();
+        if (!barcode) {
+          document.getElementById("barcode-search").focus();
+          return;
+        }
+        status.textContent = "Đang tìm hồ sơ theo mã vạch…";
+        try {
+          const exam = await get(
+            `/exams/by-code/${encodeURIComponent(barcode)}`,
+          );
+          const query = new URLSearchParams({
+            PatientId: exam.patient_id,
+            ExamId: exam.exam_id,
+          });
+          if (exam.patient?.mst) query.set("MST", exam.patient.mst);
+          if (exam.campaign_id) query.set("CampaignId", exam.campaign_id);
+          location.href = `ksk-tu-du-18.html?${query}`;
+        } catch (error) {
+          status.innerHTML = `<span class="text-danger">${esc(error.message)}</span>`;
+          document.getElementById("barcode-search").select();
+        }
+      }
+      async function downloadExport(url) {
+        if (exportInProgress) return;
+        exportInProgress = true;
+        exportLoading.classList.remove("d-none");
+        exportButton.setAttribute("aria-busy", "true");
+        updateAddPatientButton();
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.detail || `Lỗi API (${response.status})`);
+          }
+          const blob = await response.blob();
+          const disposition = response.headers.get("content-disposition") || "";
+          const encodedName = disposition.match(
+            /filename\*=UTF-8''([^;]+)/i,
+          )?.[1];
+          const regularName = disposition.match(/filename="?([^";]+)"?/i)?.[1];
+          const filename = encodedName
+            ? decodeURIComponent(encodedName)
+            : regularName || "Export";
+          const objectUrl = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = objectUrl;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+        } catch (error) {
+          alert(`Không thể export: ${error.message}`);
+        } finally {
+          exportInProgress = false;
+          exportLoading.classList.add("d-none");
+          exportButton.removeAttribute("aria-busy");
+          updateAddPatientButton();
+        }
+      }
+      function exportExcel() {
+        const mst = companyFilter.value;
+        const campaignId = campaignFilter.value;
+        if (!mst || !campaignId) {
+          alert("Hãy chọn đơn vị và đợt khám trước khi xuất Excel.");
+          return;
+        }
+        const query = new URLSearchParams({ mst, campaign_id: campaignId });
+        return downloadExport(`${API}/patients/export.xlsx?${query}`);
+      }
+      function exportImportTemplate() {
+        const mst = companyFilter.value;
+        const campaignId = campaignFilter.value;
+        if (!mst || !campaignId) {
+          alert("Hãy chọn đơn vị và đợt khám trước khi tải template.");
+          return;
+        }
+        const query = new URLSearchParams({ mst, campaign_id: campaignId });
+        return downloadExport(`${API}/patients/import-template.xlsx?${query}`);
+      }
+      function exportCampaignA4() {
+        const mst = companyFilter.value;
+        const campaignId = campaignFilter.value;
+        if (!mst || !campaignId) {
+          alert("Hãy chọn đơn vị và đợt khám trước khi xuất phiếu A4.");
+          return;
+        }
+        const query = new URLSearchParams({ mst });
+        return downloadExport(
+          `${API}/exam-campaigns/${encodeURIComponent(campaignId)}/word-a4-all?${query}`,
+        );
+      }
+      function exportCampaignWord() {
+        const mst = companyFilter.value;
+        const campaignId = campaignFilter.value;
+        if (!mst || !campaignId) {
+          alert("Hãy chọn đơn vị và đợt khám trước khi xuất file Word.");
+          return;
+        }
+        const query = new URLSearchParams({ mst });
+        return downloadExport(
+          `${API}/exam-campaigns/${encodeURIComponent(campaignId)}/word-all?${query}`,
+        );
+      }
+      function exportCampaignWordWithPhoto() {
+        const mst = companyFilter.value;
+        const campaignId = campaignFilter.value;
+        if (!mst || !campaignId) {
+          alert("Hãy chọn đơn vị và đợt khám trước khi xuất file Word có ảnh.");
+          return;
+        }
+        const query = new URLSearchParams({ mst });
+        return downloadExport(
+          `${API}/exam-campaigns/${encodeURIComponent(campaignId)}/word-photo-all?${query}`,
+        );
+      }
+      async function loadPatients(forceRefresh = false) {
+        const q = document.getElementById("search").value.trim();
+        if (!companyFilter.value) {
+          status.textContent = "Vui lòng chọn đơn vị.";
+          patientCount.textContent = "";
+          paginationInfo.textContent = "";
+          body.innerHTML =
+            '<tr><td colspan="11" class="text-center text-secondary py-4">Hãy chọn đơn vị và đợt khám trước khi lọc.</td></tr>';
+          return;
+        }
+        if (!campaignFilter.value) {
+          status.textContent = "Vui lòng chọn đợt khám để lọc danh sách.";
+          patientCount.textContent = "";
+          paginationInfo.textContent = "";
+          body.innerHTML =
+            '<tr><td colspan="11" class="text-center text-secondary py-4">Hãy chọn đơn vị và đợt khám trước khi lọc.</td></tr>';
+          return;
+        }
+        const cacheKey = JSON.stringify([
+          q,
+          companyFilter.value,
+          campaignFilter.value,
+        ]);
+        status.textContent = "Đang tải dữ liệu…";
+        patientCount.textContent = "";
+        try {
+          if (forceRefresh || patientRowsCacheKey !== cacheKey) {
+            const fetchPage = async (page) => {
+              const url = new URL(`${API}/patients/page`);
+              url.searchParams.set("page", String(page));
+              url.searchParams.set("page_size", "200");
+              if (q) url.searchParams.set("q", q);
+              url.searchParams.set("mst", companyFilter.value);
+              url.searchParams.set("campaign_id", campaignFilter.value);
+              return get(`${url.pathname.replace("/api/v1", "")}${url.search}`);
+            };
+            const firstPage = await fetchPage(1);
+            const total = Number(firstPage.total) || 0;
+            const pageCount = Math.ceil(total / 200);
+            const remainingPages = await Promise.all(
+              Array.from({ length: Math.max(0, pageCount - 1) }, (_, index) =>
+                fetchPage(index + 2),
+              ),
+            );
+            patientRowsCache = [
+              ...(firstPage.items || []),
+              ...remainingPages.flatMap((page) => page.items || []),
+            ];
+            const shsValue = (item) => {
+              const value = String(item.shs ?? "").trim();
+              return /^\d+$/.test(value) ? BigInt(value) : null;
+            };
+            patientRowsCache.sort((a, b) => {
+              const shsA = shsValue(a);
+              const shsB = shsValue(b);
+              if (shsA !== null && shsB !== null) {
+                if (shsA < shsB) return -1;
+                if (shsA > shsB) return 1;
+              } else if (shsA !== null) return -1;
+              else if (shsB !== null) return 1;
+              else {
+                const textOrder = String(a.shs ?? "").localeCompare(
+                  String(b.shs ?? ""),
+                  "vi",
+                  { numeric: true },
+                );
+                if (textOrder) return textOrder;
+              }
+              return Number(a.patient_id || 0) - Number(b.patient_id || 0);
+            });
+            patientRowsCacheKey = cacheKey;
+          }
+          const total = patientRowsCache.length;
+          const totalPages = Math.max(1, Math.ceil(total / pageSize));
+          if (currentPage > totalPages) {
+            currentPage = totalPages;
+            return loadPatients();
+          }
+          const firstRow = total ? (currentPage - 1) * pageSize + 1 : 0;
+          const lastRow = Math.min(currentPage * pageSize, total);
+          const rows = patientRowsCache.slice(firstRow - 1, lastRow);
+          status.textContent = "";
+          patientCount.textContent = `Tổng cộng ${total} bệnh nhân.`;
+          paginationInfo.textContent = total
+            ? `Đang hiển thị ${firstRow}–${lastRow} / ${total} hồ sơ`
+            : "Không có hồ sơ phù hợp.";
+          pageIndicator.textContent =
+            pageIndicatorTop.textContent = `Trang ${currentPage} / ${totalPages}`;
+          previousPageButton.disabled = previousPageTopButton.disabled =
+            currentPage <= 1;
+          nextPageButton.disabled = nextPageTopButton.disabled =
+            currentPage >= totalPages;
+          pageSizeSelect.value = pageSizeTopSelect.value = String(pageSize);
+          body.innerHTML = rows.length
+            ? rows
+                .map((item, index) => {
+                  const displayName = String(
+                    item.full_name || "",
+                  ).toLocaleUpperCase("vi-VN");
+                  const query = new URLSearchParams({
+                    PatientId: item.patient_id,
+                    MST: item.mst || "",
+                  });
+                  if (campaignFilter.value)
+                    query.set("CampaignId", campaignFilter.value);
+                  const link = item.patient_id
+                    ? `<a class="link-success text-decoration-none" href="ksk-tu-du-18.html?${query}" title="Mở và chỉnh sửa hồ sơ">${esc(displayName)}</a>`
+                    : esc(displayName);
+                  return `<tr><td>${firstRow + index}</td><td class="fw-semibold">${link}</td><td>${item.gender === 1 ? "Nam" : item.gender === 2 ? "Nữ" : ""}</td><td>${date(item.date_of_birth)}</td><td>${esc(item.identity_number)}</td><td>${esc(item.phone)}</td><td>${esc([item.address_detail, item.ward, item.province].filter(Boolean).join(", "))}</td><td>${date(item.exam_date)}</td><td>${esc(item.shs)}</td><td class="text-nowrap"><button class="btn btn-sm btn-outline-primary" type="button" onclick="printBarcode(${item.patient_id}, '${esc(displayName).replace(/'/g, "&#039;")}')"><i class="bi bi-upc-scan"></i>Barcode</button> <button class="btn btn-sm btn-outline-danger" type="button" onclick="removePatient(${item.patient_id})">Xóa</button></td></tr>`;
+                })
+                .join("")
+            : '<tr><td colspan="11" class="text-center text-secondary py-4">Chưa có dữ liệu phù hợp.</td></tr>';
+        } catch (error) {
+          paginationInfo.textContent = "";
+          patientCount.textContent = "";
+          status.innerHTML = `<span class="text-danger">Không tải được danh sách: ${esc(error.message)}</span>`;
+        }
+      }
+      async function removePatient(id) {
+        const campaignId = campaignFilter.value;
+        if (!campaignId) {
+          alert("Hãy chọn đợt khám trước khi xóa.");
+          return;
+        }
+        if (
+          !confirm(
+            "Xóa hồ sơ và các lần khám khỏi đợt khám đang chọn?\n\nThông tin hành chính gốc và dữ liệu ở các đợt khám khác (nếu có) sẽ được giữ lại.",
+          )
+        )
+          return;
+        try {
+          status.textContent = "Đang xóa hồ sơ khỏi đợt khám…";
+          const response = await fetch(
+            `${API}/patients/${encodeURIComponent(id)}/exam-campaigns/${encodeURIComponent(campaignId)}`,
+            {
+              method: "DELETE",
+            },
+          );
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok)
+            throw new Error(data.detail || `Lỗi API (${response.status})`);
+          alert(data.message || "Đã xóa hồ sơ.");
+          currentPage = 1;
+          patientRowsCacheKey = "";
+          await loadPatients(true);
+        } catch (error) {
+          status.innerHTML = `<span class="text-danger">Không thể xóa: ${esc(error.message)}</span>`;
+          alert(error.message);
+        }
+      }
+      async function printBarcode(patientId, fullName) {
+        const campaignId = campaignFilter.value;
+        if (!campaignId) {
+          alert("Hãy chọn đợt khám trước khi in Barcode.");
+          return;
+        }
+        const printWindow = { document: { write: () => {} } };
+        if (!printWindow) {
+          alert(
+            "Trình duyệt đã chặn cửa sổ in. Hãy cho phép pop-up cho trang này.",
+          );
+          return;
+        }
+        printWindow.document.write(
+          "<p style='font-family:Arial;padding:18px'>Đang chuẩn bị Barcode…</p>",
+        );
+        try {
+          const response = await fetch(
+            `${API}/patients/${encodeURIComponent(patientId)}/exam-campaigns/${encodeURIComponent(campaignId)}/barcode-pdf`,
+            { method: "POST" },
+          );
+          if (
+            response.ok &&
+            (response.headers.get("content-type") || "").includes(
+              "application/pdf",
+            )
+          ) {
+            const fileUrl = URL.createObjectURL(await response.blob());
+            const download = document.createElement("a");
+            download.href = fileUrl;
+            download.download = `Barcode_${patientId}.pdf`;
+            download.click();
+            setTimeout(() => URL.revokeObjectURL(fileUrl), 1000);
+            return;
+          }
+          const data = await response.json();
+          if (!response.ok)
+            throw new Error(data.detail || `Lỗi API (${response.status})`);
+          const safeCode = esc(data.exam_code);
+          const safeName = esc(data.patient_name || fullName);
+          const birthDate = data.date_of_birth ? date(data.date_of_birth) : "";
+          const labelName = birthDate
+            ? `${safeName} · ${esc(birthDate)}`
+            : safeName;
+          printWindow.document.open();
+          printWindow.document.write(
+            `<!doctype html><html><head><meta charset="utf-8"><title>In Barcode</title><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script><style>@page{size:100mm 30mm;margin:2mm}body{margin:0;font-family:Arial,sans-serif;width:96mm;text-align:center}.name{font-size:10pt;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0 0 2mm}svg{display:block;max-width:94mm;height:14mm;margin:0 auto}</style></head><body><div class="name">${labelName}</div><svg id="barcode"></svg><script>window.onload=()=>{JsBarcode('#barcode','${safeCode}',{format:'CODE128',displayValue:false,margin:0,height:55});setTimeout(()=>window.print(),250)};<\/script></body></html>`,
+          );
+          printWindow.document.close();
+        } catch (error) {
+          printWindow.close();
+          alert(`Không thể tạo Barcode: ${error.message}`);
+        }
+      }
+      async function removeCampaignPatients() {
+        const mst = companyFilter.value;
+        const campaignId = campaignFilter.value;
+        if (!mst || !campaignId) {
+          alert("Hãy chọn đơn vị và đợt khám trước khi xóa.");
+          return;
+        }
+        const company = companies.find((item) => item.mst === mst);
+        const campaign = campaigns.find(
+          (item) => String(item.campaign_id) === String(campaignId),
+        );
+        if (
+          !confirm(
+            `Xóa toàn bộ bệnh nhân và các lần khám của đợt '${campaign?.campaign_name || campaignId}' thuộc ${company?.name || mst}?\n\nDanh mục đợt khám và bệnh nhân ở các đợt khác sẽ được giữ lại.`,
+          )
+        )
+          return;
+        try {
+          const response = await fetch(
+            `${API}/exam-campaigns/${encodeURIComponent(campaignId)}/patients?mst=${encodeURIComponent(mst)}`,
+            { method: "DELETE" },
+          );
+          const data = await response.json();
+          if (!response.ok)
+            throw new Error(data.detail || `Lỗi API (${response.status})`);
+          alert(data.message);
+          currentPage = 1;
+          patientRowsCacheKey = "";
+          await loadPatients(true);
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+      window.removePatient = removePatient;
+      window.printBarcode = printBarcode;
+      document.getElementById("search-button").addEventListener("click", () => {
+        currentPage = 1;
+        loadPatients(true);
+      });
+      previousPageButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage -= 1;
+          loadPatients();
+        }
+      });
+      previousPageTopButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage -= 1;
+          loadPatients();
+        }
+      });
+      nextPageButton.addEventListener("click", () => {
+        currentPage += 1;
+        loadPatients();
+      });
+      nextPageTopButton.addEventListener("click", () => {
+        currentPage += 1;
+        loadPatients();
+      });
+      const changePageSize = (event) => {
+        pageSize = Number(event.target.value) || 50;
+        currentPage = 1;
+        loadPatients();
+      };
+      pageSizeSelect.addEventListener("change", changePageSize);
+      pageSizeTopSelect.addEventListener("change", changePageSize);
+      deleteCampaignButton.addEventListener("click", removeCampaignPatients);
+      exportButton.addEventListener("click", () => {
+        if (exportFormat.value === "excel") exportExcel();
+        else if (exportFormat.value === "template") exportImportTemplate();
+        else if (exportFormat.value === "word-all") exportCampaignWord();
+        else if (exportFormat.value === "word-photo-all")
+          exportCampaignWordWithPhoto();
+        else if (exportFormat.value === "a4-all") exportCampaignA4();
+      });
+      importExamResultsButton.addEventListener("click", () => {
+        if (!companyFilter.value || !campaignFilter.value) {
+          alert("Hãy chọn đơn vị và đợt khám trước khi nhập kết quả.");
+          return;
+        }
+        importExamResultsFile.click();
+      });
+      importExamResultsFile.addEventListener("change", async () => {
+        const file = importExamResultsFile.files?.[0];
+        if (!file) return;
+        if (
+          !window.confirm(
+            `Nhập kết quả từ file “${file.name}” vào đợt khám đang chọn? Các ô trống sẽ được giữ nguyên dữ liệu hiện có.`,
+          )
+        ) {
+          importExamResultsFile.value = "";
+          return;
+        }
+        const buttonLabel = importExamResultsButton.textContent;
+        importExamResultsButton.disabled = true;
+        importExamResultsButton.textContent = "Đang nhập...";
+        try {
+          const query = new URLSearchParams({
+            mst: companyFilter.value,
+            campaign_id: campaignFilter.value,
+          });
+          const response = await fetch(
+            `${API}/patients/import-exam-results.xlsx?${query}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              },
+              body: file,
+            },
+          );
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            const detail =
+              typeof result.detail === "string"
+                ? result.detail
+                : JSON.stringify(result.detail || result);
+            throw new Error(detail || `Lỗi API (${response.status})`);
+          }
+          alert(
+            result.message ||
+              `Đã nhập ${result.updated || 0} lần khám; tạo mới ${result.created || 0}; bỏ qua ${result.skipped || 0} dòng.`,
+          );
+          await loadPatients(true);
+        } catch (error) {
+          alert(`Không thể nhập kết quả: ${error.message}`);
+        } finally {
+          importExamResultsButton.disabled = false;
+          importExamResultsButton.textContent = buttonLabel;
+          importExamResultsFile.value = "";
+        }
+      });
+      exportFormat.addEventListener("change", () => {
+        exportButton.disabled =
+          exportInProgress ||
+          !(companyFilter.value && campaignFilter.value && exportFormat.value);
+      });
+      addPatientButton.addEventListener("click", addPatient);
+      document
+        .getElementById("barcode-button")
+        .addEventListener("click", findByBarcode);
+      document
+        .getElementById("barcode-search")
+        .addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            findByBarcode();
+          }
+        });
+      document.getElementById("search").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          currentPage = 1;
+          loadPatients(true);
+        }
+      });
+      companyFilter.addEventListener("change", async () => {
+        updatePageHeading();
+        await loadCampaigns();
+        body.innerHTML = "";
+        paginationInfo.textContent = "";
+        patientCount.textContent = "";
+        currentPage = 1;
+        status.textContent = "Chọn đợt khám, sau đó bấm Lọc.";
+        updateAddPatientButton();
+      });
+      campaignFilter.addEventListener("change", () => {
+        body.innerHTML = "";
+        paginationInfo.textContent = "";
+        patientCount.textContent = "";
+        currentPage = 1;
+        status.textContent = "Bấm Lọc để áp dụng điều kiện đợt khám.";
+        updateAddPatientButton();
+      });
+      (async () => {
+        const desiredCampaign = new URLSearchParams(location.search).get(
+          "CampaignId",
+        );
+        await loadCompanies();
+        await loadCampaigns(desiredCampaign);
+        if (companyFilter.value && campaignFilter.value)
+          await loadPatients(true);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,2763 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Giấy khám sức khỏe từ đủ 18 tuổi</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link href="menu.css" rel="stylesheet" />
+    <style>
+      :root {
+        --brand: #00695c;
+        --brand-dark: #003f3b;
+        --accent: #f4a261;
+        --soft: #e8f5f2;
+        --ink: #183b4a;
+      }
+      body {
+        background: linear-gradient(
+          145deg,
+          #edf5f7 0%,
+          #f7fafb 45%,
+          #eaf5f0 100%
+        );
+        color: #253942;
+        min-height: 100vh;
+      }
+      .page-header {
+        background: linear-gradient(120deg, #003f3b, #00695c 56%, #168b7a);
+        color: white;
+        box-shadow: 0 0.5rem 1.4rem rgba(0, 63, 59, 0.2);
+      }
+      .form-shell {
+        max-width: 1320px;
+      }
+      .nav-pills {
+        gap: 0.35rem;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 0.25rem;
+      }
+      .nav-pills .nav-link {
+        color: #315560;
+        white-space: nowrap;
+        border: 1px solid #d2e0e3;
+        background: rgba(255, 255, 255, 0.94);
+        font-weight: 700;
+      }
+      .nav-pills .nav-link.active {
+        background: var(--brand);
+        border-color: var(--brand);
+        box-shadow: 0 0.25rem 0.7rem rgba(0, 105, 92, 0.22);
+      }
+      .section-title {
+        color: var(--brand-dark);
+        font-size: 1.1rem;
+        font-weight: 800;
+        border-bottom: 3px solid #78c7bb;
+        padding-bottom: 0.55rem;
+        margin: 1.5rem 0 1rem;
+        letter-spacing: 0.01em;
+      }
+      .subheading {
+        color: #165d68;
+        font-size: 0.98rem;
+        font-weight: 800;
+        margin: 1rem 0 0.6rem;
+      }
+      .card {
+        border: 1px solid rgba(0, 105, 92, 0.1);
+        border-radius: 0.75rem;
+        box-shadow: 0 0.35rem 1.2rem rgba(22, 67, 76, 0.09);
+      }
+      .form-label,
+      .form-check-label {
+        color: var(--ink);
+        font-weight: 750;
+        letter-spacing: 0.005em;
+      }
+      .form-label {
+        margin-bottom: 0.38rem;
+      }
+      .clinical-fill-button {
+        min-width: 34px;
+        height: 34px;
+        padding: 0.2rem 0.4rem;
+      }
+      .clinical-fill-button i {
+        font-size: 1.15rem;
+        line-height: 1;
+      }
+      .clinical-field-fill-button {
+        min-width: 28px;
+        height: 26px;
+        padding: 0.1rem 0.35rem;
+        vertical-align: middle;
+      }
+      .clinical-field-fill-button i {
+        font-size: 1rem;
+        line-height: 1;
+      }
+      .biochemical-results-table th,
+      .biochemical-results-table td {
+        padding: 0.25rem 0.4rem !important;
+      }
+      .biochemical-results-table .form-control {
+        min-height: 2rem;
+      }
+      .quick-normal-button {
+        min-width: 28px;
+        height: 26px;
+        padding: 0.1rem 0.35rem;
+        vertical-align: middle;
+      }
+      .quick-normal-button i {
+        font-size: 1rem;
+        line-height: 1;
+      }
+      .clinical-summary-button {
+        min-width: 28px;
+        height: 26px;
+        padding: 0.1rem 0.35rem;
+        vertical-align: middle;
+      }
+      .form-control,
+      .form-select {
+        border-color: #b9cdd2;
+        min-height: 2.5rem;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: #159b8a;
+        box-shadow: 0 0 0 0.22rem rgba(21, 155, 138, 0.16);
+      }
+      #qr_scan_data {
+        border-color: #38a796;
+        background: #fbfffe;
+        font-weight: 600;
+      }
+      #parse_qr_button {
+        font-weight: 750;
+        border-color: #168b7a;
+        color: #00695c;
+      }
+      #parse_qr_button:hover {
+        background: #00695c;
+        border-color: #00695c;
+        color: #fff;
+      }
+      .exam-context-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 0.6rem;
+        overflow-x: auto;
+        padding-bottom: 0.15rem;
+      }
+      .exam-context-row > * {
+        flex: 0 0 auto;
+      }
+      #new-patient-scope {
+        display: contents;
+      }
+      #new_patient_company {
+        width: 310px;
+      }
+      #campaign_id {
+        width: 410px;
+      }
+      .shs-display {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        min-height: 2.5rem;
+        padding: 0.35rem 0.65rem;
+        border: 1px solid #b9cdd2;
+        border-radius: 0.375rem;
+        background: #f8fbfb;
+        color: #07584f;
+        font-weight: 750;
+        white-space: nowrap;
+      }
+      .shs-display .pending {
+        color: #8a6500;
+        font-weight: 650;
+      }
+      .shs-display input {
+        width: 5.5rem;
+        min-height: 1.9rem;
+        padding: 0.15rem 0.35rem;
+        font-weight: 750;
+      }
+      .exam-context-note {
+        margin-top: 0.45rem;
+      }
+      .administrative-fields {
+        row-gap: 0.8rem !important;
+      }
+      .administrative-fields > [class*="col-"] {
+        display: grid;
+        grid-template-columns: minmax(135px, 34%) minmax(0, 1fr);
+        gap: 0.75rem;
+        align-items: center;
+      }
+      .administrative-fields > [class*="col-"] > .form-label {
+        margin: 0;
+        line-height: 1.35;
+      }
+      .administrative-fields > [class*="col-"] > .form-control,
+      .administrative-fields > [class*="col-"] > .form-select {
+        width: 100%;
+      }
+      .administrative-fields > .col-12 {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+      }
+      .administrative-fields > .col-12 > .form-label {
+        margin-bottom: 0.15rem;
+      }
+      .administrative-fields > .col-12 .form-text {
+        margin-left: 0;
+      }
+      @media (min-width: 768px) {
+        .administrative-fields > .col-md-8,
+        .administrative-fields > .col-md-6,
+        .administrative-fields > .col-md-5,
+        .administrative-fields > .col-md-4,
+        .administrative-fields > .col-md-3,
+        .administrative-fields > .col-md-2,
+        .administrative-fields > .col-md-1 {
+          width: 50%;
+        }
+      }
+      @media (max-width: 767.98px) {
+        .administrative-fields > [class*="col-"] {
+          grid-template-columns: 1fr;
+          gap: 0.28rem;
+        }
+      }
+      .table > :not(caption) > * > * {
+        vertical-align: middle;
+      }
+      .table thead th {
+        background: var(--soft);
+        color: #07584f;
+        font-weight: 800;
+      }
+      #clinical .table th:first-child,
+      #clinical .table td:first-child {
+        width: 22% !important;
+      }
+      #clinical .table th:nth-child(2),
+      #clinical .table td:nth-child(2) {
+        width: 50% !important;
+      }
+      #clinical .table th:nth-child(3),
+      #clinical .table td:nth-child(3) {
+        width: 28% !important;
+      }
+      .required::after {
+        content: " *";
+        color: #c11;
+      }
+      textarea {
+        min-height: 78px;
+      }
+      #save-message {
+        position: sticky;
+        top: 0.75rem;
+        z-index: 1030;
+      }
+      @media print {
+        .no-print,
+        .nav-pills,
+        .page-header .btn {
+          display: none !important;
+        }
+        body {
+          background: #fff;
+        }
+        .card {
+          box-shadow: none;
+        }
+        .tab-pane {
+          display: block !important;
+          opacity: 1 !important;
+          page-break-after: always;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-app-menu="new-record"></div>
+    <header class="page-header py-4 mb-4">
+      <div
+        class="container form-shell d-flex justify-content-between align-items-center gap-3"
+      >
+        <div>
+          <div class="text-uppercase small opacity-75">
+            Mẫu số 03 · Thông tư 25/2026/TT-BYT
+          </div>
+          <h1 class="h3 mb-0">Giấy khám sức khỏe từ đủ 18 tuổi</h1>
+        </div>
+        <div class="d-flex flex-wrap gap-2 no-print">
+          <button
+            class="btn btn-outline-light"
+            id="back-to-list-button"
+            type="button"
+          >
+            <i class="bi bi-arrow-left"></i> Quay lại danh sách</button
+          ><button
+            class="btn btn-light"
+            id="download-word-button"
+            type="button"
+          >
+            Tải phiếu Word</button
+          ><button
+            class="btn btn-outline-light"
+            id="download-word-a4-button"
+            type="button"
+          >
+            Tải phiếu A4</button
+          ><button
+            class="btn btn-warning"
+            id="download-word-photo-button"
+            type="button"
+          >
+            Tải Word có ảnh
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="container form-shell pb-5">
+      <form id="health-form" autocomplete="off">
+        <div class="card mb-3 no-print">
+          <div class="card-body py-3">
+            <div class="exam-context-row">
+              <div id="new-patient-scope" hidden>
+                <label
+                  class="form-label required mb-0"
+                  for="new_patient_company"
+                  >Công ty</label
+                ><select class="form-select" id="new_patient_company" disabled>
+                  <option value="">Đang tải danh sách công ty…</option>
+                </select>
+              </div>
+              <label class="form-label required mb-0" for="campaign_id"
+                >Đợt khám của hồ sơ</label
+              ><select
+                class="form-select"
+                name="campaign_id"
+                id="campaign_id"
+                required
+                disabled
+              >
+                <option value="">Đang tải thông tin bệnh nhân…</option>
+              </select>
+              <div class="shs-display" aria-live="polite">
+                <span>SHS:</span
+                ><span id="shs-value" class="pending">Chờ cấp</span>
+              </div>
+            </div>
+            <div class="text-secondary small exam-context-note">
+              Các mục 1–6 được lưu trong lần khám của bệnh nhân và đợt khám đang
+              chọn.
+            </div>
+          </div>
+        </div>
+        <nav class="nav nav-pills mb-4 no-print" id="form-tabs" role="tablist">
+          <button
+            class="nav-link active"
+            data-bs-toggle="pill"
+            data-bs-target="#administrative"
+            type="button"
+          >
+            1. Thông tin hành chính
+          </button>
+          <button
+            class="nav-link"
+            data-bs-toggle="pill"
+            data-bs-target="#history"
+            type="button"
+          >
+            2. Tiền sử bệnh
+          </button>
+          <button
+            class="nav-link"
+            data-bs-toggle="pill"
+            data-bs-target="#physical"
+            type="button"
+          >
+            3. Khám thể lực
+          </button>
+          <button
+            class="nav-link"
+            data-bs-toggle="pill"
+            data-bs-target="#clinical"
+            type="button"
+          >
+            4. Khám lâm sàng
+          </button>
+          <button
+            class="nav-link"
+            data-bs-toggle="pill"
+            data-bs-target="#laboratory"
+            type="button"
+          >
+            5. Khám cận lâm sàng
+          </button>
+          <button
+            class="nav-link"
+            data-bs-toggle="pill"
+            data-bs-target="#conclusion"
+            type="button"
+          >
+            6. Kết luận
+          </button>
+        </nav>
+        <div id="save-message" aria-live="polite"></div>
+        <div class="tab-content">
+          <section class="tab-pane fade show active" id="administrative">
+            <div class="card">
+              <div class="card-body p-md-4">
+                <h2 class="section-title mt-0">Thông tin hành chính</h2>
+                <div class="row g-3 administrative-fields">
+                  <div class="col-12">
+                    <label class="form-label" for="qr_scan_data"
+                      >Quét mã QR CCCD</label
+                    >
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        id="qr_scan_data"
+                        autocomplete="off"
+                        autofocus
+                        placeholder="Đặt con trỏ tại đây rồi quét QR CCCD (dữ liệu cách nhau bằng dấu |)"
+                      /><button
+                        class="btn btn-outline-success"
+                        id="parse_qr_button"
+                        type="button"
+                      >
+                        Tách thông tin
+                      </button>
+                    </div>
+                    <div class="form-text">
+                      Dạng hỗ trợ: Số CCCD | Số CMND cũ | Họ tên | Ngày sinh |
+                      Giới tính | Địa chỉ | Ngày cấp. Máy quét gửi phím Enter sẽ
+                      tự tách.
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label required"
+                      >Họ và tên (chữ in hoa)</label
+                    ><input
+                      class="form-control text-uppercase"
+                      name="full_name"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Giới tính</label
+                    ><select class="form-select" name="gender">
+                      <option value="">-- Chọn --</option>
+                      <option>Nam</option>
+                      <option>Nữ</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Điện thoại</label
+                    ><input class="form-control" type="tel" name="phone" />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Ngày sinh</label
+                    ><input
+                      class="form-control"
+                      type="date"
+                      name="birth_date"
+                    />
+                  </div>
+                  <div class="col-md-1">
+                    <label class="form-label">Tuổi</label
+                    ><input
+                      class="form-control"
+                      type="number"
+                      min="18"
+                      name="age"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">CCCD/Hộ chiếu/Mã định danh</label
+                    ><input class="form-control" name="identity_number" />
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Cấp ngày</label
+                    ><input
+                      class="form-control"
+                      type="date"
+                      name="identity_date"
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Nơi cấp</label
+                    ><input class="form-control" name="identity_place" />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Dân tộc</label
+                    ><input class="form-control" name="ethnicity" />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Đối tượng</label
+                    ><input class="form-control" name="subject_type" />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Nguồn chi trả</label
+                    ><input class="form-control" name="payment_source" />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Nhóm máu (nếu có)</label
+                    ><input class="form-control" name="blood_group" />
+                  </div>
+                  <div class="col-md-5">
+                    <label class="form-label" for="province"
+                      >Nơi ở hiện tại — Tỉnh/Thành</label
+                    ><select
+                      class="form-select"
+                      name="province"
+                      id="province"
+                      disabled
+                    >
+                      <option value="">Đang tải danh mục tỉnh/thành…</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label" for="ward">Phường/Xã</label
+                    ><select class="form-select" name="ward" id="ward" disabled>
+                      <option value="">Chọn tỉnh/thành trước</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Số nhà/Thôn/Xóm</label
+                    ><input class="form-control" name="address_detail" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Nghề nghiệp</label
+                    ><input class="form-control" name="occupation" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Nơi làm việc, học tập</label
+                    ><input class="form-control" name="workplace" />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Lý do khám sức khỏe</label
+                    ><input class="form-control" name="reason" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="tab-pane fade" id="history">
+            <div class="card">
+              <div class="card-body p-md-4">
+                <h2 class="section-title mt-0">
+                  Tiền sử bệnh của đối tượng khám sức khỏe
+                </h2>
+                <div class="subheading">1. Tiền sử gia đình</div>
+                <div class="row g-3 align-items-end">
+                  <div class="col-md-4">
+                    <label class="form-label d-block"
+                      >Có người mắc bệnh được nêu trong mẫu?</label
+                    >
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="family_history"
+                        value="Không"
+                      /><label class="form-check-label">Không</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="family_history"
+                        value="Có"
+                      /><label class="form-check-label">Có</label>
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">Nếu có, ghi cụ thể tên bệnh</label
+                    ><input class="form-control" name="family_history_detail" />
+                  </div>
+                </div>
+                <div class="subheading">2. Tiền sử bản thân</div>
+                <p class="small text-secondary">
+                  Đánh dấu tình trạng cho từng bệnh, tật.
+                </p>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-sm">
+                    <thead>
+                      <tr>
+                        <th style="width: 4%">TT</th>
+                        <th>Tên bệnh, tật</th>
+                        <th class="text-center" style="width: 7%">Có</th>
+                        <th class="text-center" style="width: 7%">Không</th>
+                      </tr>
+                    </thead>
+                    <tbody id="history-rows"></tbody>
+                  </table>
+                </div>
+                <div class="subheading">3. Câu hỏi khác</div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Đang điều trị bệnh gì?</label
+                    ><textarea
+                      class="form-control"
+                      name="current_treatment"
+                      placeholder="Không/Có — tên bệnh, thuốc đang dùng và liều lượng"
+                    ></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label"
+                      >Tiền sử thai sản (đối với phụ nữ)</label
+                    ><textarea
+                      class="form-control"
+                      name="obstetric_history"
+                      placeholder="Không/Có — thông tin chi tiết"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="tab-pane fade" id="physical">
+            <div class="card">
+              <div class="card-body p-md-4">
+                <h2 class="section-title mt-0">I. Khám thể lực</h2>
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <label class="form-label" for="height">Chiều cao (cm)</label
+                    ><input
+                      class="form-control"
+                      type="number"
+                      min="1"
+                      step="0.1"
+                      name="height"
+                      id="height"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label" for="weight">Cân nặng (kg)</label
+                    ><input
+                      class="form-control"
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      name="weight"
+                      id="weight"
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label" for="bmi">Chỉ số BMI</label
+                    ><input
+                      class="form-control"
+                      type="number"
+                      step="0.1"
+                      name="bmi"
+                      id="bmi"
+                      readonly
+                      aria-describedby="bmi-help"
+                    />
+                    <div id="bmi-help" class="form-text">
+                      Tự tính: kg / chiều cao (m)²
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label" for="bmi-classification"
+                      >Phân loại BMI (người châu Á)</label
+                    ><input
+                      class="form-control"
+                      id="bmi-classification"
+                      readonly
+                      aria-live="polite"
+                      placeholder="Nhập chiều cao và cân nặng"
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Mạch (lần/phút)</label
+                    ><input class="form-control" type="number" name="pulse" />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Huyết áp (mmHg)</label
+                    ><input
+                      class="form-control"
+                      placeholder="VD: 120/80"
+                      name="blood_pressure"
+                    />
+                  </div>
+                  <div class="col-md-5">
+                    <label class="form-label"
+                      >Phân loại thể lực (theo đánh giá khám)</label
+                    ><input
+                      class="form-control"
+                      name="physical_classification"
+                    />
+                    <div class="form-text">
+                      Trường này riêng biệt với phân loại BMI.
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="alert alert-info py-2 mb-0 small">
+                      Phân loại BMI theo bảng người châu Á bạn cung cấp; BMI chỉ
+                      là công cụ sàng lọc ban đầu, cần kết hợp các chỉ số sức
+                      khỏe khác để đánh giá toàn diện.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="tab-pane fade" id="clinical">
+            <div class="card">
+              <div class="card-body p-md-4">
+                <h2 class="section-title mt-0">II. Khám lâm sàng</h2>
+                <div class="table-responsive">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Nội dung khám</th>
+                        <th style="width: 28%">
+                          <span class="d-inline-flex align-items-center gap-1"
+                            >Kết quả / Phân loại
+                            <button
+                              id="fill-normal-clinical"
+                              class="btn btn-sm btn-outline-success clinical-fill-button"
+                              type="button"
+                              title="Điền Bình thường vào các ô đang trống"
+                              aria-label="Điền Bình thường vào các ô kết quả đang trống"
+                            >
+                              <i class="bi bi-magic"></i></button
+                          ></span>
+                        </th>
+                        <th style="width: 22%">Họ tên, chữ ký Bác sĩ</th>
+                      </tr>
+                    </thead>
+                    <tbody id="clinical-rows"></tbody>
+                  </table>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label"
+                      >Thị lực không kính (MP / MT)</label
+                    ><input
+                      class="form-control"
+                      name="vision_no_glasses"
+                      placeholder="Mắt phải / Mắt trái"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Thị lực có kính (MP / MT)</label
+                    ><input
+                      class="form-control"
+                      name="vision_glasses"
+                      placeholder="Mắt phải / Mắt trái"
+                    />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Các bệnh về mắt</label
+                    ><input class="form-control" name="eye_disease" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label"
+                      >Thính lực tai phải (nói thường / nói thầm, m)</label
+                    ><input class="form-control" name="hearing_right" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label"
+                      >Thính lực tai trái (nói thường / nói thầm, m)</label
+                    ><input class="form-control" name="hearing_left" />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Các bệnh về Tai-Mũi-Họng</label
+                    ><input class="form-control" name="ent_disease" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Răng-Hàm-Mặt — Hàm trên</label
+                    ><input class="form-control" name="upper_jaw" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Răng-Hàm-Mặt — Hàm dưới</label
+                    ><input class="form-control" name="lower_jaw" />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Các bệnh về Răng-Hàm-Mặt</label
+                    ><input class="form-control" name="dental_disease" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="tab-pane fade" id="laboratory">
+            <div class="card">
+              <div class="card-body p-md-4">
+                <h2 class="section-title mt-0">III. Khám cận lâm sàng</h2>
+                <div class="row g-3">
+                  <div class="col-12">
+                    <h3 class="subheading">a) Xét nghiệm máu</h3>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label"
+                      >Huyết học — Tổng phân tích tế bào máu ngoại vi</label
+                    ><textarea
+                      class="form-control"
+                      name="hematology"
+                    ></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Sinh hóa máu</label
+                    ><textarea
+                      class="form-control"
+                      name="blood_biochemistry"
+                      placeholder="Đường máu, Ure, Creatinin, ASAT (GOT), ALAT (GPT)"
+                    ></textarea>
+                  </div>
+                  <div class="col-12">
+                    <h3 class="subheading">b) Xét nghiệm nước tiểu</h3>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Tổng phân tích nước tiểu</label
+                    ><textarea
+                      class="form-control"
+                      name="urinalysis"
+                    ></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Khác (nếu có)</label
+                    ><textarea
+                      class="form-control"
+                      name="urine_other"
+                    ></textarea>
+                  </div>
+                  <div class="col-12">
+                    <h3 class="subheading">
+                      c) Chẩn đoán hình ảnh — XQ Tim Phổi thẳng
+                    </h3>
+                    <textarea class="form-control" name="chest_xray"></textarea>
+                  </div>
+                  <div class="col-12">
+                    <h3 class="subheading">d) Kết quả cận lâm sàng khác</h3>
+                    <textarea
+                      class="form-control"
+                      name="other_paraclinical"
+                    ></textarea>
+                  </div>
+                  <div class="col-12 border-top pt-3">
+                    <h3 class="subheading">
+                      Khám sức khỏe định kỳ (theo chỉ định bác sĩ)
+                    </h3>
+                    <textarea
+                      class="form-control"
+                      name="periodic_paraclinical"
+                      placeholder="Nội dung cận lâm sàng thực hiện và kết quả"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="tab-pane fade" id="conclusion">
+            <div class="card">
+              <div class="card-body p-md-4">
+                <h2 class="section-title mt-0">IV. Kết luận</h2>
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label required"
+                      >Tình trạng sức khỏe; các bệnh, tật (nếu có)</label
+                    ><textarea
+                      class="form-control"
+                      name="health_status"
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="col-md-7">
+                    <label class="form-label"
+                      >Phân loại sức khỏe (theo quy định Bộ Y tế)</label
+                    ><select class="form-select" name="health_classification">
+                      <option value="">-- Chọn phân loại --</option>
+                      <option value="1">Loại I – Rất khỏe</option>
+                      <option value="2">Loại II – Khỏe</option>
+                      <option value="3">Loại III – Trung bình</option>
+                      <option value="4">Loại IV – Yếu</option>
+                      <option value="5">Loại V – Rất yếu</option>
+                    </select>
+                  </div>
+                  <div class="col-md-5">
+                    <label class="form-label">Ngày kết luận</label
+                    ><input
+                      class="form-control"
+                      type="date"
+                      name="conclusion_date"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Người kết luận</label
+                    ><input class="form-control" name="conclusion_by" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Chức danh / ghi chú</label
+                    ><input class="form-control" name="conclusion_note" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Mã bệnh ICD-10 (nếu có)</label>
+                    <div class="position-relative">
+                    <input
+                      class="form-control"
+                      name="conclusion_disease_codes"
+                      maxlength="255"
+                      autocomplete="off"
+                      aria-autocomplete="list"
+                      aria-controls="icd10-suggestions"
+                      placeholder="Ví dụ: J06.9; I10"
+                    />
+                    <div id="icd10-suggestions" class="list-group position-absolute w-100 shadow-sm" role="listbox" style="z-index:1060;display:none;max-height:260px;overflow-y:auto"></div>
+                    </div>
+                    <div class="form-text">Nếu có nhiều mã, phân cách bằng dấu chấm phẩy (;).</div>
+                  </div>
+                </div>
+                <div class="mt-4 no-print">
+                  <button type="submit" class="btn btn-success">
+                    Kiểm tra thông tin</button
+                  ><button type="reset" class="btn btn-outline-secondary ms-2">
+                    Nhập lại
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </form>
+    </main>
+    <script src="menu-loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Thay đổi URL này (hoặc localStorage key ksk_api_base_url) nếu API chạy ở máy chủ khác.
+      // Never trigger an insecure download from an HTTPS form.  The production
+      // reverse proxy must expose /api/v1 on the same HTTPS origin as this page.
+      const savedApiBaseUrl = localStorage.getItem("ksk_api_base_url");
+      const API_BASE_URL =
+        location.protocol === "https:"
+          ? `${location.origin}/api/v1`
+          : savedApiBaseUrl || `${location.origin}/api/v1`;
+      const state = JSON.parse(
+        localStorage.getItem("ksk_exam_session") || "{}",
+      );
+      const histories = [
+        "Có bệnh hay bị thương trong 5 năm qua",
+        "Có bệnh thần kinh hay bị thương ở đầu",
+        "Bệnh mắt hoặc giảm thị lực (trừ trường hợp đeo kính thuốc)",
+        "Bệnh ở tai, giảm sức nghe hoặc thăng bằng",
+        "Bệnh ở tim hoặc nhồi máu cơ tim, các bệnh tim mạch khác",
+        "Phẫu thuật can thiệp tim - mạch (thay van tim, bắc cầu nối, tạo hình mạch, máy tạo nhịp, đặt stent mạch, ghép tim)",
+        "Tăng huyết áp",
+        "Khó thở",
+        "Bệnh phổi, hen, khí quản thủng, viêm phế quản mạn tính",
+        "Bệnh thận, lọc máu",
+        "Nghiện rượu, bia",
+        "Đái tháo đường hoặc kiểm soát tăng đường huyết",
+        "Bệnh tâm thần",
+        "Mất ý thức, rối loạn ý thức",
+        "Ngất, chóng mặt",
+        "Bệnh tiêu hóa",
+        "Rối loạn giấc ngủ, ngừng thở khi ngủ, ngủ rũ ban ngày, ngáy to",
+        "Tai biến mạch máu não hoặc liệt",
+        "Bệnh hoặc tổn thương cột sống",
+        "Sử dụng rượu thường xuyên, liên tục",
+        "Sử dụng ma túy, chất gây nghiện",
+        "Bệnh khác (ghi rõ)",
+      ];
+      const clinical = [
+        "Nội khoa — Tuần hoàn",
+        "Nội khoa — Hô hấp",
+        "Nội khoa — Tiêu hóa",
+        "Nội khoa — Thận-Tiết niệu-Sinh dục",
+        "Nội khoa — Nội tiết",
+        "Nội khoa — Cơ-Xương-Khớp",
+        "Nội khoa — Thần kinh",
+        "Nội khoa — Tâm thần",
+        "Ngoại khoa",
+        "Da liễu",
+        "Sản phụ khoa",
+        "Mắt",
+        "Tai-Mũi-Họng",
+        "Răng-Hàm-Mặt",
+      ];
+      const clinicalCodes = [
+        "INTERNAL_CIRCULATION",
+        "INTERNAL_RESPIRATORY",
+        "INTERNAL_DIGESTIVE",
+        "INTERNAL_UROGENITAL",
+        "INTERNAL_ENDOCRINE",
+        "INTERNAL_MUSCULOSKELETAL",
+        "INTERNAL_NEUROLOGY",
+        "INTERNAL_PSYCHIATRY",
+        "SURGERY",
+        "DERMATOLOGY",
+        "OBSTETRICS",
+        "EYE",
+        "ENT",
+        "DENTAL",
+      ];
+      const biochemicalAnalytes = [
+        ["GLUCOSE", "Đường máu", "biochem_glucose"],
+        ["UREA", "Ure", "biochem_urea"],
+        ["CREATININE", "Creatinin", "biochem_creatinine"],
+        ["AST", "ASAT (GOT)", "biochem_ast"],
+        ["ALT", "ALAT (GPT)", "biochem_alt"],
+      ];
+      const form = document.querySelector("#health-form");
+      const $ = (name) =>
+        form.querySelector(`[name="${name}"]`) ||
+        form.querySelector(`#${CSS.escape(name)}`);
+      const value = (name) => $(name)?.value.trim() || null;
+      const selectedLabel = (name) =>
+        $(name)?.selectedOptions?.[0]?.dataset.name || null;
+      const codedOptions = {
+        occupation: [
+          ["01", "Lực lượng vũ trang (quân đội, công an)"],
+          ["02", "Cán bộ lãnh đạo trong các ngành, các cấp"],
+          ["03", "Chuyên môn kỹ thuật bậc cao"],
+          ["04", "Chuyên môn kỹ thuật bậc trung"],
+          ["05", "Nhân viên chuyên môn kỹ thuật"],
+          ["06", "Lao động dịch vụ và bán hàng"],
+          ["07", "Nông, lâm, ngư nghiệp"],
+          ["08", "Thợ thủ công và các thợ liên quan"],
+          ["09", "Thợ vận hành máy móc, thiết bị và lắp ráp"],
+          ["10", "Lao động phổ thông / lao động giản đơn"],
+          ["11", "Học sinh, sinh viên"],
+          ["12", "Trẻ em dưới 6 tuổi"],
+          ["13", "Người làm việc văn phòng / nghề cụ thể khác"],
+          ["99", "Hưu trí, nội trợ, không có việc làm hoặc khác"],
+        ],
+        ethnicity: [
+          ["01", "Kinh"],
+          ["02", "Tày"],
+          ["03", "Thái"],
+          ["04", "Mường"],
+          ["05", "Mông"],
+          ["06", "Dao"],
+          ["99", "Dân tộc khác / người nước ngoài"],
+        ],
+        subject_type: [
+          ["1", "Người cao tuổi"],
+          ["2", "Người khuyết tật"],
+          ["3", "Người thuộc hộ nghèo, cận nghèo"],
+          ["4", "Người có công"],
+          ["5", "Người mắc bệnh mạn tính"],
+          ["6", "Người sống tại vùng đồng bào dân tộc thiểu số và miền núi"],
+          [
+            "7",
+            "Người sống tại vùng có điều kiện kinh tế - xã hội khó khăn, đặc biệt khó khăn",
+          ],
+          ["8", "Người sống tại xã đảo"],
+          ["9", "Người sống tại đặc khu"],
+          ["10", "Trẻ em trong cơ sở giáo dục mầm non"],
+          ["11", "Học sinh trong cơ sở giáo dục phổ thông"],
+          ["12", "Sinh viên"],
+          ["13", "Người lao động"],
+          ["14", "Người lao động không chính thức"],
+          ["15", "Người chưa có bảo hiểm y tế"],
+          ["16", "Các đối tượng khác"],
+        ],
+        payment_source: [
+          ["1", "Ngân sách Trung ương"],
+          ["2", "Ngân sách địa phương"],
+          ["3", "Quỹ Bảo hiểm y tế"],
+          ["4", "Người sử dụng lao động"],
+          ["5", "Xã hội hóa"],
+          ["9", "Khác"],
+        ],
+      };
+      function makeCodedSelect(name, options, placeholder) {
+        const oldField = $(name);
+        if (!oldField || oldField.tagName === "SELECT") return;
+        const select = document.createElement("select");
+        select.className = oldField.className;
+        select.name = name;
+        select.required = oldField.required;
+        select.append(new Option(placeholder, ""));
+        options.forEach(([code, label]) => {
+          const option = new Option(`${code} - ${label}`, code);
+          option.dataset.name = label;
+          select.append(option);
+        });
+        oldField.replaceWith(select);
+      }
+      makeCodedSelect(
+        "occupation",
+        codedOptions.occupation,
+        "-- Chọn mã nghề nghiệp --",
+      );
+      makeCodedSelect(
+        "ethnicity",
+        codedOptions.ethnicity,
+        "-- Chọn dân tộc --",
+      );
+      makeCodedSelect(
+        "subject_type",
+        codedOptions.subject_type,
+        "-- Chọn đối tượng khám --",
+      );
+      makeCodedSelect(
+        "payment_source",
+        codedOptions.payment_source,
+        "-- Chọn nguồn chi trả --",
+      );
+      const numberValue = (name) => {
+        const v = value(name);
+        return v === null ? null : Number(v);
+      };
+      const persist = () =>
+        localStorage.setItem("ksk_exam_session", JSON.stringify(state));
+      const flash = (message, type = "success") => {
+        document.querySelector("#save-message").innerHTML =
+          `<div class="alert alert-${type} alert-dismissible fade show shadow-sm" role="alert">${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+      };
+      function displayShs(shs) {
+        let field = document.querySelector("#shs-value");
+        if (!field) return;
+        const editable = Boolean(urlPatientId());
+        if (editable && field.tagName !== "INPUT") {
+          const input = document.createElement("input");
+          input.type = "text";
+          input.id = "shs-value";
+          input.className = "form-control form-control-sm";
+          input.maxLength = 30;
+          input.autocomplete = "off";
+          input.inputMode = "numeric";
+          input.pattern = "[0-9]+";
+          input.placeholder = "Nhập SHS";
+          input.setAttribute("aria-label", "Số hồ sơ sức khỏe SHS");
+          input.addEventListener("input", () => input.setCustomValidity(""));
+          field.replaceWith(input);
+          field = input;
+        } else if (!editable && field.tagName === "INPUT") {
+          const text = document.createElement("span");
+          text.id = "shs-value";
+          field.replaceWith(text);
+          field = text;
+        }
+        const pending = !shs || String(shs) === "0";
+        if (field.tagName === "INPUT") field.value = pending ? "" : String(shs);
+        else {
+          field.textContent = pending ? "Chờ cấp" : String(shs);
+          field.classList.toggle("pending", pending);
+        }
+      }
+      async function request(path, options = {}) {
+        const response = await fetch(`${API_BASE_URL}${path}`, {
+          headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {}),
+          },
+          ...options,
+        });
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({}));
+          const apiError = new Error(error.detail || `Lỗi API (${response.status})`);
+          apiError.status = response.status;
+          throw apiError;
+        }
+        return response.status === 204 ? null : response.json();
+      }
+      const icdInput = $("conclusion_disease_codes");
+      const icdSuggestions = document.querySelector("#icd10-suggestions");
+      let icdSearchTimer;
+      if (icdInput && icdSuggestions) {
+        const hideIcdSuggestions = () => {
+          icdSuggestions.replaceChildren();
+          icdSuggestions.style.display = "none";
+        };
+        icdInput.addEventListener("input", () => {
+          clearTimeout(icdSearchTimer);
+          const parts = icdInput.value.split(";");
+          const query = parts[parts.length - 1].trim();
+          if (query.length < 2) return hideIcdSuggestions();
+          icdSearchTimer = setTimeout(async () => {
+            try {
+              const matches = await request(`/icd10?q=${encodeURIComponent(query)}`);
+              icdSuggestions.replaceChildren();
+              matches.forEach((item) => {
+                const option = document.createElement("button");
+                option.type = "button";
+                option.className = "list-group-item list-group-item-action py-2";
+                option.setAttribute("role", "option");
+                option.textContent = `${item.code} — ${item.name_vi}`;
+                option.addEventListener("mousedown", (event) => event.preventDefault());
+                option.addEventListener("click", () => {
+                  parts[parts.length - 1] = ` ${item.code}`;
+                  icdInput.value = parts.join(";").replace(/^\s+/, "").replace(/;\s*/g, "; ");
+                  icdInput.dispatchEvent(new Event("change", { bubbles: true }));
+                  hideIcdSuggestions();
+                });
+                icdSuggestions.append(option);
+              });
+              icdSuggestions.style.display = matches.length ? "block" : "none";
+            } catch {
+              hideIcdSuggestions();
+            }
+          }, 250);
+        });
+        icdInput.addEventListener("blur", () => setTimeout(hideIcdSuggestions, 150));
+      }
+      let adminProvinceCache = null;
+      async function getAdministrativeProvinces() {
+        if (!adminProvinceCache)
+          adminProvinceCache = await request("/administrative/provinces");
+        return adminProvinceCache;
+      }
+      function addAddressOption(select, code, label, name) {
+        const option = document.createElement("option");
+        option.value = code || "";
+        option.textContent = label;
+        option.dataset.name = name;
+        select.append(option);
+        return option;
+      }
+      function normalizeProvinceName(name) {
+        return (name || "")
+          .trim()
+          .replace(/^(Tỉnh|Thành phố)\s+/i, "")
+          .toLocaleLowerCase("vi");
+      }
+      async function loadAdministrativeWards(
+        provinceCode,
+        selectedWardCode = null,
+        legacyWardName = null,
+      ) {
+        const wardSelect = $("ward");
+        wardSelect.innerHTML = "";
+        addAddressOption(
+          wardSelect,
+          "",
+          provinceCode ? "-- Chọn Phường/Xã --" : "Chọn tỉnh/thành trước",
+          "",
+        );
+        if (!provinceCode) {
+          if (legacyWardName)
+            addAddressOption(
+              wardSelect,
+              "",
+              legacyWardName,
+              legacyWardName,
+            ).selected = true;
+          wardSelect.disabled = true;
+          return;
+        }
+        wardSelect.disabled = true;
+        const wards = await request(
+          `/administrative/provinces/${encodeURIComponent(provinceCode)}/wards`,
+        );
+        wards.forEach((item) =>
+          addAddressOption(
+            wardSelect,
+            item.ward_code,
+            `${item.ward_name} (${item.ward_code})`,
+            item.ward_name,
+          ),
+        );
+        const found = wards.some((item) => item.ward_code === selectedWardCode);
+        if (found) wardSelect.value = selectedWardCode;
+        else if (legacyWardName)
+          addAddressOption(
+            wardSelect,
+            "",
+            legacyWardName,
+            legacyWardName,
+          ).selected = true;
+        wardSelect.disabled = false;
+      }
+      async function loadAdministrativeAddress(patient = {}) {
+        const provinceSelect = $("province");
+        provinceSelect.innerHTML = "";
+        addAddressOption(provinceSelect, "", "-- Chọn Tỉnh/Thành --", "");
+        const provinces = await getAdministrativeProvinces();
+        provinces.forEach((item) =>
+          addAddressOption(
+            provinceSelect,
+            item.province_code,
+            `${item.province_name} (${item.province_code})`,
+            item.province_name,
+          ),
+        );
+        const matchingProvince =
+          provinces.find(
+            (item) => item.province_code === patient.province_code,
+          ) ||
+          provinces.find(
+            (item) =>
+              normalizeProvinceName(item.province_name) ===
+              normalizeProvinceName(patient.province),
+          );
+        if (matchingProvince)
+          provinceSelect.value = matchingProvince.province_code;
+        else if (patient.province)
+          addAddressOption(
+            provinceSelect,
+            "",
+            patient.province,
+            patient.province,
+          ).selected = true;
+        provinceSelect.disabled = false;
+        await loadAdministrativeWards(
+          matchingProvince?.province_code || null,
+          patient.ward_code,
+          patient.ward,
+        );
+      }
+      function selectedCampaignId() {
+        const campaignField = $("campaign_id");
+        const selected = Number(
+          campaignField ? campaignField.value : urlCampaignId() || 0,
+        );
+        return Number.isSafeInteger(selected) && selected > 0 ? selected : null;
+      }
+      function selectedNewPatientMst() {
+        const companySelect = document.querySelector("#new_patient_company");
+        return companySelect?.selectedOptions[0]?.dataset.mst || null;
+      }
+      async function loadNewPatientCampaigns(
+        companyId,
+        selectedCampaignId = null,
+      ) {
+        const campaignSelect = $("campaign_id");
+        campaignSelect.disabled = true;
+        campaignSelect.innerHTML =
+          '<option value="">Đang tải đợt khám…</option>';
+        if (!companyId) {
+          campaignSelect.innerHTML =
+            '<option value="">Chọn công ty trước</option>';
+          return;
+        }
+        const campaigns = await request(
+          `/exam-campaigns?company_id=${encodeURIComponent(companyId)}`,
+        );
+        campaignSelect.innerHTML =
+          '<option value="">-- Chọn đợt khám --</option>' +
+          campaigns
+            .map(
+              (item) =>
+                `<option value="${item.campaign_id}">${item.campaign_name} (${item.start_date}${item.end_date ? ` — ${item.end_date}` : ""})</option>`,
+            )
+            .join("");
+        campaignSelect.disabled = false;
+        if (
+          selectedCampaignId &&
+          campaigns.some(
+            (item) => Number(item.campaign_id) === Number(selectedCampaignId),
+          )
+        )
+          campaignSelect.value = String(selectedCampaignId);
+      }
+      async function loadNewPatientCompanies(
+        selectedMst = null,
+        selectedCampaignId = null,
+      ) {
+        const companySelect = document.querySelector("#new_patient_company");
+        const companies = await request("/companies?limit=500");
+        companySelect.innerHTML =
+          '<option value="">-- Chọn công ty --</option>' +
+          companies
+            .filter((item) => item.mst)
+            .map(
+              (item) =>
+                `<option value="${item.company_id}" data-mst="${item.mst}">${item.name} — MST: ${item.mst}</option>`,
+            )
+            .join("");
+        companySelect.disabled = false;
+        const defaultCompany =
+          companies.find((item) => item.mst === selectedMst) ||
+          companies.find((item) => item.mst);
+        if (!defaultCompany)
+          throw new Error("Chưa có công ty có mã số thuế để thêm bệnh nhân.");
+        companySelect.value = String(defaultCompany.company_id);
+        await loadNewPatientCampaigns(
+          defaultCompany.company_id,
+          selectedCampaignId,
+        );
+      }
+      function examPayload() {
+        return {
+          patient_id: state.patientId,
+          campaign_id: selectedCampaignId(),
+          subject_codes: value("subject_type"),
+          subject_type: selectedLabel("subject_type"),
+          payment_source_code: numberValue("payment_source"),
+          payment_source: selectedLabel("payment_source"),
+          exam_reason: value("reason"),
+          exam_date: examDateTimeValue(),
+          status: "Draft",
+        };
+      }
+      function localDateInputValue(value = new Date()) {
+        if (value === null || value === "") return "";
+        if (typeof value === "string") {
+          const isoDate = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+          if (isoDate) return `${isoDate[3]}/${isoDate[2]}/${isoDate[1]}`;
+        }
+        const date = value instanceof Date ? value : new Date(value);
+        if (Number.isNaN(date.getTime())) return "";
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${day}/${month}/${year}`;
+      }
+      function examDateTimeValue() {
+        const match = $("exam_date")?.value.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (!match) throw new Error("Ngày khám phải theo định dạng ngày/tháng/năm.");
+        const [, dayText, monthText, yearText] = match;
+        const day = Number(dayText);
+        const month = Number(monthText);
+        const year = Number(yearText);
+        const check = new Date(Date.UTC(year, month - 1, day));
+        if (check.getUTCFullYear() !== year || check.getUTCMonth() !== month - 1 || check.getUTCDate() !== day)
+          throw new Error("Ngày khám không hợp lệ.");
+        return `${yearText}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T00:00:00`;
+      }
+      function validateExamDateInput() {
+        const field = $("exam_date");
+        if (!field) return;
+        try {
+          examDateTimeValue();
+          field.setCustomValidity("");
+        } catch (error) {
+          field.setCustomValidity(error.message);
+        }
+      }
+      async function ensureExam() {
+        if (!state.patientId)
+          throw new Error("Hãy lưu Thông tin hành chính trước.");
+        if (!selectedCampaignId())
+          throw new Error(
+            "Hãy chọn đợt khám để lưu thông tin theo bệnh nhân và đợt khám.",
+          );
+        if (!state.examId) {
+          const exam = await request("/exams", {
+            method: "POST",
+            body: JSON.stringify(examPayload()),
+          });
+          state.examId = exam.exam_id;
+          persist();
+        }
+        return state.examId;
+      }
+      async function downloadExamWord(format = "word", sourceButton = null) {
+        const isA4 = format === "a4";
+        const isConclusionA4 = format === "a4-conclusion";
+        const isPhoto = format === "photo";
+        const button =
+          sourceButton ||
+          document.querySelector(
+            isPhoto
+              ? "#download-word-photo-button"
+              : isA4
+                ? "#download-word-a4-button"
+                : isConclusionA4
+                  ? "#save-and-download-a4-conclusion"
+                : "#download-word-button",
+          );
+        const buttonLabel =
+          sourceButton?.dataset.defaultLabel ||
+          (isPhoto
+            ? "Tải Word có ảnh"
+            : isA4
+              ? "Tải phiếu A4"
+              : isConclusionA4
+                ? "Lưu và Tải phiếu A4"
+              : "Tải phiếu Word");
+        try {
+          if (!state.examId && state.patientId && selectedCampaignId())
+            await loadExamForCampaign();
+          if (!state.examId)
+            throw new Error(
+              "Hãy lưu thông tin hành chính của lần khám trước khi tải phiếu Word.",
+            );
+          button.disabled = true;
+          button.textContent = "Đang tạo Word…";
+          const endpoint = isConclusionA4 ? "word-a4-conclusion" : isA4 ? "word-a4" : isPhoto ? "word-with-photo" : "word";
+          window.location.assign(
+            `${API_BASE_URL}/exams/${encodeURIComponent(state.examId)}/${endpoint}`,
+          );
+        } catch (error) {
+          flash(error.message, "warning");
+        } finally {
+          window.setTimeout(() => {
+            button.disabled = false;
+            button.innerHTML = buttonLabel;
+          }, 1200);
+        }
+      }
+      function urlPatientIdentifiers() {
+        const params = new URLSearchParams(location.search);
+        return {
+          shs: params.get("SHS")?.trim() || null,
+          mst: params.get("MST")?.trim() || null,
+        };
+      }
+      function isNewPatientRequest() {
+        return urlPatientIdentifiers().shs === "0";
+      }
+      function urlPatientId() {
+        const value = Number(
+          new URLSearchParams(location.search).get("PatientId"),
+        );
+        return Number.isSafeInteger(value) && value > 0 ? value : null;
+      }
+      function urlExamId() {
+        const value = Number(
+          new URLSearchParams(location.search).get("ExamId"),
+        );
+        return Number.isSafeInteger(value) && value > 0 ? value : null;
+      }
+      function urlCampaignId() {
+        const value = Number(
+          new URLSearchParams(location.search).get("CampaignId"),
+        );
+        return Number.isSafeInteger(value) && value > 0 ? value : null;
+      }
+      function backToPatientList() {
+        const identifiers = urlPatientIdentifiers();
+        const mst = selectedNewPatientMst() || identifiers.mst;
+        const campaignId = selectedCampaignId() || urlCampaignId();
+        if (!mst || !campaignId) {
+          flash(
+            "Chưa xác định được Công ty hoặc Đợt khám để quay lại danh sách.",
+            "warning",
+          );
+          return;
+        }
+        location.href = `list.html?${new URLSearchParams({ MST: mst, CampaignId: campaignId })}`;
+      }
+      async function resolvePatientFromUrl() {
+        const { shs, mst } = urlPatientIdentifiers();
+        const patientId = urlPatientId();
+        if (patientId) {
+          const patient = await request(`/patients/${patientId}`);
+          state.patientId = patient.patient_id;
+          if (urlCampaignId()) state.campaignId = urlCampaignId();
+          persist();
+          return patient;
+        }
+        if (!shs || !mst || isNewPatientRequest()) return null;
+        const campaignId = urlCampaignId();
+        const campaignQuery = campaignId
+          ? `&campaign_id=${encodeURIComponent(campaignId)}`
+          : "";
+        const patient = await request(
+          `/patients/by-shs/${encodeURIComponent(shs)}?mst=${encodeURIComponent(mst)}${campaignQuery}`,
+        );
+        state.patientId = patient.patient_id;
+        if (campaignId) state.campaignId = campaignId;
+        persist();
+        return patient;
+      }
+      async function saveAdministrative() {
+        const name = $("full_name");
+        if (!name.checkValidity()) {
+          name.reportValidity();
+          return false;
+        }
+        const examDateField = $("exam_date");
+        validateExamDateInput();
+        if (!examDateField.checkValidity()) {
+          examDateField.reportValidity();
+          return false;
+        }
+        const identifiers = urlPatientIdentifiers();
+        const isNewPatient = isNewPatientRequest();
+        if (!isNewPatient && identifiers.shs && identifiers.mst)
+          await resolvePatientFromUrl();
+        const selectedMst = isNewPatient
+          ? selectedNewPatientMst()
+          : identifiers.mst;
+        if (isNewPatient && !selectedMst)
+          throw new Error(
+            "Hãy chọn công ty trước khi lưu thông tin hành chính.",
+          );
+        const codedPatientFields = {
+          ethnicity: selectedLabel("ethnicity"),
+          ethnicity_code: value("ethnicity"),
+          occupation: selectedLabel("occupation"),
+          occupation_code: value("occupation"),
+        };
+        const fullNameUpper =
+          value("full_name")?.toLocaleUpperCase("vi-VN") || "";
+        $("full_name").value = fullNameUpper;
+        const editedShs =
+          document.querySelector("#shs-value")?.tagName === "INPUT"
+            ? document.querySelector("#shs-value").value.trim() || null
+            : identifiers.shs;
+        const shsInput = document.querySelector("#shs-value");
+        if (
+          shsInput?.tagName === "INPUT" &&
+          (!editedShs || !/^[0-9]+$/.test(editedShs))
+        ) {
+          shsInput.setCustomValidity("SHS bắt buộc và chỉ được gồm chữ số.");
+          shsInput.reportValidity();
+          return false;
+        }
+        const payload = {
+          shs: editedShs,
+          mst: selectedMst,
+          full_name: fullNameUpper,
+          gender:
+            value("gender") === "Nam" ? 1 : value("gender") === "Nữ" ? 2 : null,
+          date_of_birth: value("birth_date"),
+          phone: value("phone"),
+          identity_number: value("identity_number"),
+          identity_issue_date: value("identity_date"),
+          identity_issue_place: value("identity_place"),
+          ethnicity: value("ethnicity"),
+          blood_group: value("blood_group"),
+          province: selectedLabel("province"),
+          province_code: value("province"),
+          ward: selectedLabel("ward"),
+          ward_code: value("ward"),
+          address_detail: value("address_detail"),
+          occupation: value("occupation"),
+          workplace: value("workplace"),
+        };
+        Object.assign(payload, codedPatientFields);
+        const initialCampaignId = selectedCampaignId();
+        if (!initialCampaignId)
+          throw new Error(
+            "Hãy chọn đợt khám trước khi lưu thông tin hành chính.",
+          );
+        if (isNewPatient) payload.shs = null;
+        const patientUpdatePath = state.patientId
+          ? `/patients/${state.patientId}?campaign_id=${encodeURIComponent(initialCampaignId)}`
+          : null;
+        let patient;
+        let restoredExistingPatient = false;
+        try {
+          patient = await request(
+            state.patientId
+              ? patientUpdatePath
+              : isNewPatient
+                ? "/patients/new-for-campaign"
+                : "/patients",
+            {
+              method: state.patientId ? "PATCH" : "POST",
+              body: JSON.stringify(
+                isNewPatient && !state.patientId
+                  ? { ...payload, campaign_id: initialCampaignId }
+                  : payload,
+              ),
+            },
+          );
+        } catch (error) {
+          const identityNumber = value("identity_number");
+          if (!isNewPatient || state.patientId || error.status !== 409 || !identityNumber)
+            throw error;
+          patient = await request(
+            `/patients/restore-for-campaign?${new URLSearchParams({ identity_number: identityNumber, mst: selectedMst, campaign_id: initialCampaignId })}`,
+            { method: "POST" },
+          );
+          restoredExistingPatient = true;
+        }
+        state.patientId = patient.patient_id;
+        if (isNewPatient)
+          history.replaceState(
+            null,
+            "",
+            `ksk-tu-du-18.html?${new URLSearchParams({ PatientId: patient.patient_id, MST: patient.mst || identifiers.mst || "", CampaignId: initialCampaignId })}`,
+          );
+        displayShs(patient.shs);
+        const campaignId = selectedCampaignId();
+        if (!campaignId) {
+          persist();
+          throw new Error(
+            "Thông tin hành chính đã lưu. Hãy chọn đợt khám trước khi lưu lý do khám sức khỏe.",
+          );
+        }
+        const examData = {
+          campaign_id: campaignId,
+          exam_date: examDateTimeValue(),
+          exam_reason: value("reason"),
+          subject_type: value("subject_type"),
+          payment_source: value("payment_source"),
+        };
+        Object.assign(examData, {
+          subject_codes: value("subject_type"),
+          subject_type: selectedLabel("subject_type"),
+          payment_source_code: numberValue("payment_source"),
+          payment_source: selectedLabel("payment_source"),
+        });
+        if (state.examId)
+          await request(
+            `/exams/${state.examId}?${new URLSearchParams({ patient_id: state.patientId })}`,
+            {
+            method: "PATCH",
+            body: JSON.stringify(examData),
+            },
+          );
+        else {
+          const exam = await request("/exams", {
+            method: "POST",
+            body: JSON.stringify({ ...examPayload(), ...examData }),
+          });
+          state.examId = exam.exam_id;
+        }
+        state.campaignId = campaignId;
+        persist();
+        flash(
+          restoredExistingPatient
+            ? `Đã khôi phục hồ sơ cũ vào đợt khám và lưu thông tin. SHS: <strong>${patient.shs || "Chưa cấp"}</strong>.`
+            : `Đã lưu thông tin hành chính và lý do khám theo đợt khám.${isNewPatient ? ` SHS đã được cấp: <strong>${patient.shs}</strong>.` : ""}`,
+        );
+        return true;
+      }
+      async function prepareNewPatientFromUrl() {
+        const { mst } = urlPatientIdentifiers();
+        const campaignId = urlCampaignId();
+        delete state.patientId;
+        delete state.examId;
+        delete state.campaignId;
+        persist();
+        form.reset();
+        $("exam_date").value = localDateInputValue();
+        displayShs(null);
+        document.querySelector("#new-patient-scope").hidden = false;
+        await loadNewPatientCompanies(mst, campaignId);
+        await loadAdministrativeAddress();
+        flash(
+          "Chọn hoặc thay đổi Công ty và Đợt khám trước khi nhập thông tin bệnh nhân.",
+          "info",
+        );
+      }
+      function setValue(name, input) {
+        const field = $(name);
+        if (!field) return;
+        let normalized = input ?? "";
+        if (
+          [
+            "ethnicity",
+            "occupation",
+            "subject_type",
+            "payment_source",
+          ].includes(name) &&
+          normalized &&
+          !Array.from(field.options).some(
+            (option) => option.value === String(normalized),
+          )
+        ) {
+          const legacyLabel = String(normalized).trim().toLocaleLowerCase("vi");
+          normalized =
+            Array.from(field.options).find(
+              (option) =>
+                option.dataset.name?.toLocaleLowerCase("vi") === legacyLabel,
+            )?.value || "";
+        }
+        field.value = normalized;
+      }
+      function parseQrDate(rawDate) {
+        const digits = String(rawDate || "").replace(/\D/g, "");
+        if (!/^\d{8}$/.test(digits)) return null;
+        const formatIfValid = (year, month, day) => {
+          const yearNumber = Number(year);
+          const monthNumber = Number(month);
+          const dayNumber = Number(day);
+          const daysInMonth = [31, yearNumber % 4 === 0 && (yearNumber % 100 !== 0 || yearNumber % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+          if (monthNumber < 1 || monthNumber > 12 || dayNumber < 1 || dayNumber > daysInMonth[monthNumber - 1]) return null;
+          return `${year}-${month}-${day}`;
+        };
+        // CCCD QR uses ddMMyyyy. Try it first because 20012023 means
+        // 20/01/2023, not 20/01/2023 interpreted as yyyyMMdd.
+        return (
+          formatIfValid(digits.slice(4, 8), digits.slice(2, 4), digits.slice(0, 2)) ||
+          formatIfValid(digits.slice(0, 4), digits.slice(4, 6), digits.slice(6, 8))
+        );
+      }
+      function qrGender(rawGender) {
+        const normalized = String(rawGender || "")
+          .trim()
+          .toLocaleLowerCase("vi");
+        if (normalized === "nam" || normalized === "male") return "Nam";
+        if (
+          normalized === "nữ" ||
+          normalized === "nu" ||
+          normalized === "female"
+        )
+          return "Nữ";
+        return null;
+      }
+      function qrAddressDetail(rawAddress) {
+        const parts = String(rawAddress || "")
+          .split(",")
+          .map((part) => part.trim())
+          .filter(Boolean);
+        // QR CCCD commonly ends with phường/xã and tỉnh/thành. These are not
+        // repeated in the free-text house/address-detail field.
+        return (parts.length > 2 ? parts.slice(0, -2) : parts).join(", ");
+      }
+      function normalizeAdministrativeText(text) {
+        return String(text || "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLocaleLowerCase("vi")
+          .replace(/^(tinh|thanh pho|phuong|xa|thi tran)\s+/i, "")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+      async function applyQrAdministrativeAddress(rawAddress) {
+        const addressParts = String(rawAddress || "")
+          .split(",")
+          .map((part) => part.trim())
+          .filter(Boolean);
+        if (addressParts.length < 3) return false;
+        const provinceText = addressParts.at(-1);
+        const wardText = addressParts.at(-2);
+        const provinces = await getAdministrativeProvinces();
+        const province = provinces.find(
+          (item) =>
+            normalizeAdministrativeText(item.province_name) ===
+            normalizeAdministrativeText(provinceText),
+        );
+        if (!province) return false;
+        const provinceSelect = $("province");
+        provinceSelect.value = province.province_code;
+        await loadAdministrativeWards(province.province_code);
+        const wards = await request(
+          `/administrative/provinces/${encodeURIComponent(province.province_code)}/wards`,
+        );
+        const ward = wards.find(
+          (item) =>
+            normalizeAdministrativeText(item.ward_name) ===
+            normalizeAdministrativeText(wardText),
+        );
+        if (!ward) return false;
+        $("ward").value = ward.ward_code;
+        return true;
+      }
+      async function parseCitizenQr() {
+        const qrField = document.querySelector("#qr_scan_data");
+        // Some QR keyboard scanners emit } or ¦ instead of | depending on the
+        // active Windows keyboard layout. Treat these as the CCCD field divider.
+        const qrData = qrField.value
+          .replace(/^\uFEFF/, "")
+          .replace(/[}¦]/g, "|");
+        const parts = qrData.split("|").map((part) => part.trim());
+        if (
+          parts.length !== 7 ||
+          parts.some((part, index) => index !== 1 && !part)
+        ) {
+          flash(
+            "QR CCCD không đúng định dạng. Cần đủ 7 phần, ngăn cách bằng dấu |.",
+            "warning",
+          );
+          return false;
+        }
+        const birthDate = parseQrDate(parts[3]);
+        const issueDate = parseQrDate(parts[6]);
+        if (!birthDate || !issueDate) {
+          flash(
+            "Không đọc được ngày sinh hoặc ngày cấp trên QR. Hãy kiểm tra định dạng 8 chữ số.",
+            "warning",
+          );
+          return false;
+        }
+        const gender = qrGender(parts[4]);
+        setValue("identity_number", parts[0]);
+        setValue("full_name", parts[2]);
+        setValue("birth_date", birthDate);
+        setValue("identity_date", issueDate);
+        setValue("address_detail", qrAddressDetail(parts[5]));
+        if (gender) setValue("gender", gender);
+        updateAge();
+        let addressMatched = false;
+        try {
+          addressMatched = await applyQrAdministrativeAddress(parts[5]);
+        } catch (_) {
+          addressMatched = false;
+        }
+        flash(
+          `Đã tách thông tin QR cho ${parts[2]}. Số CMND cũ: ${parts[1] || "không có"}.${addressMatched ? " Đã tự chọn Tỉnh/Thành và Phường/Xã." : " Hãy kiểm tra lại Tỉnh/Thành và Phường/Xã trước khi lưu."}`,
+          "success",
+        );
+        $("phone")?.focus();
+        return true;
+      }
+      function updateBmi() {
+        const heightCm = Number(value("height"));
+        const weightKg = Number(value("weight"));
+        const bmiField = $("bmi");
+        const classificationField = $("bmi-classification");
+        if (!bmiField || !classificationField) return;
+        if (!heightCm || !weightKg || heightCm <= 0 || weightKg <= 0) {
+          bmiField.value = "";
+          classificationField.value = "";
+          return;
+        }
+        const bmi = weightKg / (heightCm / 100) ** 2;
+        bmiField.value = bmi.toFixed(1);
+        classificationField.value =
+          bmi < 16
+            ? "Gầy độ 3"
+            : bmi < 17
+              ? "Gầy độ 2"
+              : bmi < 18.5
+                ? "Gầy độ 1"
+                : bmi < 23
+                  ? "Bình thường, lý tưởng"
+                  : bmi < 25
+                    ? "Tiền béo phì, thừa cân"
+                    : bmi < 30
+                      ? "Béo phì độ I"
+                      : "Béo phì độ II";
+      }
+      function setRadio(name, hasCondition) {
+        if (hasCondition === null || hasCondition === undefined) return;
+        const expected = hasCondition ? "Có" : "Không";
+        const radio = form.querySelector(
+          `[name="${name}"][value="${expected}"]`,
+        );
+        if (radio) radio.checked = true;
+      }
+      function loadClinicalResult(index, item) {
+        if (!item) return;
+        const special = {
+          11: [
+            ["Thị lực không kính", "vision_no_glasses"],
+            ["Thị lực có kính", "vision_glasses"],
+            ["Bệnh mắt", "eye_disease"],
+          ],
+          12: [
+            ["Thính lực tai phải", "hearing_right"],
+            ["Thính lực tai trái", "hearing_left"],
+            ["Bệnh Tai-Mũi-Họng", "ent_disease"],
+          ],
+          13: [
+            ["Hàm trên", "upper_jaw"],
+            ["Hàm dưới", "lower_jaw"],
+            ["Bệnh Răng-Hàm-Mặt", "dental_disease"],
+          ],
+        };
+        const remaining = (item.result_detail || "")
+          .split(/\r?\n/)
+          .filter((line) => {
+            for (const [label, field] of special[index] || []) {
+              const prefix = `${label}: `;
+              if (line.startsWith(prefix)) {
+                setValue(field, line.slice(prefix.length));
+                return false;
+              }
+            }
+            return true;
+          });
+        setValue(`clinical_${index + 1}`, remaining.join("\n"));
+        setValue(`clinical_doctor_${index + 1}`, item.doctor_name);
+      }
+      function loadExamDetails(exam) {
+        $("exam_date").value = localDateInputValue(exam.exam_date) || localDateInputValue();
+        setValue("reason", exam.exam_reason);
+        setValue("subject_type", exam.subject_type);
+        setValue("payment_source", exam.payment_source);
+        setValue("height", exam.height_cm);
+        setValue("weight", exam.weight_kg);
+        setValue("bmi", exam.bmi);
+        setValue("pulse", exam.pulse_per_minute);
+        setValue("blood_pressure", exam.blood_pressure);
+        setValue("physical_classification", exam.physical_classification);
+        updateBmi();
+        setValue("health_status", exam.health_status);
+        setValue("health_classification", exam.health_classification);
+        setValue("conclusion_date", exam.conclusion_date);
+        setValue("conclusion_by", exam.conclusion_by);
+        setValue("conclusion_note", exam.conclusion_note);
+        setValue("conclusion_disease_codes", exam.conclusion_disease_codes);
+        if (exam.family_history) {
+          setRadio("family_history", exam.family_history.has_history);
+          setValue("family_history_detail", exam.family_history.detail);
+        }
+        if (exam.additional_history) {
+          setValue(
+            "current_treatment",
+            exam.additional_history.current_treatment,
+          );
+          setValue(
+            "obstetric_history",
+            exam.additional_history.obstetric_history,
+          );
+        }
+        const historiesByCode = Object.fromEntries(
+          (exam.personal_histories || []).map((item) => [
+            item.history_code,
+            item,
+          ]),
+        );
+        histories.forEach((_, index) =>
+          setRadio(
+            `history_${index + 1}`,
+            historiesByCode[`H${String(index + 1).padStart(2, "0")}`]
+              ?.has_condition,
+          ),
+        );
+        const clinicalByCode = Object.fromEntries(
+          (exam.clinical_results || []).map((item) => [
+            item.examination_code,
+            item,
+          ]),
+        );
+        clinicalCodes.forEach((code, index) =>
+          loadClinicalResult(index, clinicalByCode[code]),
+        );
+        const labFields = {
+          HEMATOLOGY: "hematology",
+          BLOOD_BIOCHEMISTRY: "blood_biochemistry",
+          URINALYSIS: "urinalysis",
+          URINE_OTHER: "urine_other",
+          CHEST_XRAY: "chest_xray",
+          OTHER_PARACLINICAL: "other_paraclinical",
+          PERIODIC_PARACLINICAL: "periodic_paraclinical",
+        };
+        const biochemicalFields = Object.fromEntries(
+          biochemicalAnalytes.map(([code, , field]) => [code, field]),
+        );
+        (exam.paraclinical_results || []).forEach((item) => {
+          if (labFields[item.test_code])
+            setValue(labFields[item.test_code], item.result_value);
+          else if (biochemicalFields[item.test_code])
+            setValue(biochemicalFields[item.test_code], item.result_value);
+        });
+      }
+      function updateAge() {
+        const birthDate = value("birth_date");
+        if (!birthDate) {
+          setValue("age", "");
+          return;
+        }
+        const birth = new Date(`${birthDate}T00:00:00`),
+          today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        const monthDifference = today.getMonth() - birth.getMonth();
+        if (
+          monthDifference < 0 ||
+          (monthDifference === 0 && today.getDate() < birth.getDate())
+        )
+          age--;
+        setValue("age", age >= 0 ? age : "");
+      }
+      async function loadPatientFromUrl() {
+        const { shs, mst } = urlPatientIdentifiers();
+        if (isNewPatientRequest()) {
+          try {
+            await prepareNewPatientFromUrl();
+          } catch (error) {
+            flash(error.message, "danger");
+          }
+          return;
+        }
+        if ((!shs || !mst) && !urlPatientId()) return;
+        try {
+          flash("Đang tải thông tin hành chính…", "info");
+          const patient = await resolvePatientFromUrl();
+          displayShs(patient.shs);
+          setValue("full_name", patient.full_name);
+          setValue(
+            "gender",
+            patient.gender === 1 ? "Nam" : patient.gender === 2 ? "Nữ" : "",
+          );
+          setValue("birth_date", patient.date_of_birth);
+          setValue("phone", patient.phone);
+          setValue("identity_number", patient.identity_number);
+          setValue("identity_date", patient.identity_issue_date);
+          setValue("identity_place", patient.identity_issue_place);
+          setValue("ethnicity", patient.ethnicity);
+          setValue("blood_group", patient.blood_group);
+          await loadAdministrativeAddress(patient);
+          setValue("address_detail", patient.address_detail);
+          setValue("occupation", patient.occupation);
+          setValue("workplace", patient.workplace);
+          setValue("occupation", patient.occupation_code || patient.occupation);
+          updateAge();
+          state.patientId = patient.patient_id;
+          const campaignSelect = $("campaign_id");
+          const assignedCampaigns = await request(
+            `/patients/${patient.patient_id}/exam-campaigns`,
+          );
+          const requestedCampaignId = urlCampaignId();
+          campaignSelect.innerHTML =
+            '<option value="">-- Chọn đợt khám --</option>' +
+            assignedCampaigns
+              .map(
+                (item) =>
+                  `<option value="${item.campaign_id}">${item.campaign_name} (${item.start_date}${item.end_date ? ` — ${item.end_date}` : ""})</option>`,
+              )
+              .join("");
+          campaignSelect.disabled = false;
+          if (
+            requestedCampaignId &&
+            assignedCampaigns.some(
+              (item) => Number(item.campaign_id) === requestedCampaignId,
+            )
+          )
+            campaignSelect.value = String(requestedCampaignId);
+          else if (assignedCampaigns.length === 1)
+            campaignSelect.value = String(assignedCampaigns[0].campaign_id);
+          if (urlExamId()) {
+            const exam = await request(`/exams/${urlExamId()}`);
+            if (exam.patient_id !== patient.patient_id)
+              throw new Error("ExamId không thuộc bệnh nhân trên URL.");
+            state.examId = exam.exam_id;
+            campaignSelect.value = exam.campaign_id
+              ? String(exam.campaign_id)
+              : "";
+            clearExamFields();
+            loadExamDetails(exam);
+          } else if (selectedCampaignId()) await loadExamForCampaign();
+          else delete state.examId;
+          persist();
+          flash(
+            `Đã tải hồ sơ ${patient.full_name}.${state.examId ? ` Lần khám #${state.examId} đang được sử dụng.` : " Bạn có thể chỉnh sửa và bấm Lưu thông tin hành chính."}`,
+          );
+        } catch (error) {
+          flash(error.message, "danger");
+        }
+      }
+      function clearExamFields() {
+        ["reason", "subject_type", "payment_source"].forEach((name) =>
+          setValue(name, ""),
+        );
+        [
+          "#history",
+          "#physical",
+          "#clinical",
+          "#laboratory",
+          "#conclusion",
+        ].forEach((selector) => {
+          form
+            .querySelectorAll(
+              `${selector} input, ${selector} select, ${selector} textarea`,
+            )
+            .forEach((field) => {
+              if (field.type === "radio" || field.type === "checkbox")
+                field.checked = false;
+              else field.value = "";
+            });
+        });
+      }
+      async function loadExamForCampaign() {
+        const campaignId = selectedCampaignId();
+        delete state.examId;
+        clearExamFields();
+        if (!state.patientId || !campaignId) return;
+        const exams = await request(`/patients/${state.patientId}/exams`);
+        const exam = exams.find(
+          (item) => Number(item.campaign_id) === campaignId,
+        );
+        if (exam) {
+          state.examId = exam.exam_id;
+          const detailed = await request(`/exams/${exam.exam_id}`);
+          loadExamDetails(detailed);
+        } else {
+          delete state.examId;
+          $("exam_date").value = localDateInputValue();
+          setValue("reason", "");
+        }
+        state.campaignId = campaignId;
+        persist();
+      }
+      async function saveHistory() {
+        const examId = await ensureExam();
+        const selectedFamily = form.querySelector(
+          '[name="family_history"]:checked',
+        )?.value;
+        await request(`/exams/${examId}/family-history`, {
+          method: "PUT",
+          body: JSON.stringify({
+            has_history: selectedFamily === "Có",
+            detail: value("family_history_detail"),
+          }),
+        });
+        await request(`/exams/${examId}/additional-history`, {
+          method: "PUT",
+          body: JSON.stringify({
+            current_treatment: value("current_treatment"),
+            obstetric_history: value("obstetric_history"),
+          }),
+        });
+        const items = histories.map((_, i) => {
+          const choice = form.querySelector(
+            `[name="history_${i + 1}"]:checked`,
+          )?.value;
+          return {
+            history_code: `H${String(i + 1).padStart(2, "0")}`,
+            has_condition: choice ? choice === "Có" : null,
+          };
+        });
+        await request(`/exams/${examId}/personal-histories`, {
+          method: "PUT",
+          body: JSON.stringify(items),
+        });
+        flash("Đã lưu tiền sử bệnh.");
+      }
+      async function savePhysical() {
+        const examId = await ensureExam();
+        await request(`/exams/${examId}`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            height_cm: numberValue("height"),
+            weight_kg: numberValue("weight"),
+            bmi: numberValue("bmi"),
+            pulse_per_minute: numberValue("pulse"),
+            blood_pressure: value("blood_pressure"),
+            physical_classification: value("physical_classification"),
+          }),
+        });
+        flash("Đã lưu khám thể lực.");
+      }
+      function specialClinicalResult(index) {
+        const extras = {
+          11: [
+            ["Thị lực không kính", value("vision_no_glasses")],
+            ["Thị lực có kính", value("vision_glasses")],
+            ["Bệnh mắt", value("eye_disease")],
+          ],
+          12: [
+            ["Thính lực tai phải", value("hearing_right")],
+            ["Thính lực tai trái", value("hearing_left")],
+            ["Bệnh Tai-Mũi-Họng", value("ent_disease")],
+          ],
+          13: [
+            ["Hàm trên", value("upper_jaw")],
+            ["Hàm dưới", value("lower_jaw")],
+            ["Bệnh Răng-Hàm-Mặt", value("dental_disease")],
+          ],
+        };
+        return (extras[index] || [])
+          .filter(([, v]) => v)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join("\n");
+      }
+      async function saveClinical() {
+        const examId = await ensureExam();
+        const items = clinical.map((_, i) => {
+          const base = value(`clinical_${i + 1}`);
+          const extra = specialClinicalResult(i);
+          return {
+            examination_code: clinicalCodes[i],
+            result_detail: [base, extra].filter(Boolean).join("\n") || null,
+            doctor_name: value(`clinical_doctor_${i + 1}`),
+          };
+        });
+        await request(`/exams/${examId}/clinical-results`, {
+          method: "PUT",
+          body: JSON.stringify(items),
+        });
+        flash("Đã lưu khám lâm sàng.");
+      }
+      async function saveLaboratory() {
+        const examId = await ensureExam();
+        const tests = [
+          [
+            "HEMATOLOGY",
+            "Huyết học — Tổng phân tích tế bào máu ngoại vi",
+            "hematology",
+          ],
+          ["BLOOD_BIOCHEMISTRY", "Sinh hóa máu", "blood_biochemistry"],
+          ["URINALYSIS", "Tổng phân tích nước tiểu", "urinalysis"],
+          ["URINE_OTHER", "Xét nghiệm nước tiểu khác", "urine_other"],
+          ["CHEST_XRAY", "XQ Tim Phổi thẳng", "chest_xray"],
+          ["OTHER_PARACLINICAL", "Cận lâm sàng khác", "other_paraclinical"],
+          [
+            "PERIODIC_PARACLINICAL",
+            "Cận lâm sàng định kỳ theo chỉ định",
+            "periodic_paraclinical",
+          ],
+        ]
+          .map(([test_code, test_name, field]) => ({
+            test_code,
+            test_name,
+            result_value: value(field),
+          }))
+          .filter((item) => item.result_value);
+        biochemicalAnalytes.forEach(([test_code, test_name, field]) => {
+          const result_value = value(field);
+          if (result_value) tests.push({ test_code, test_name, result_value });
+        });
+        await request(`/exams/${examId}/paraclinical-results`, {
+          method: "PUT",
+          body: JSON.stringify(tests),
+        });
+        flash("Đã lưu khám cận lâm sàng.");
+      }
+      async function saveConclusion() {
+        const statusField = $("health_status");
+        if (!statusField.checkValidity()) {
+          statusField.reportValidity();
+          return;
+        }
+        const examId = await ensureExam();
+        await request(`/exams/${examId}`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            health_status: value("health_status"),
+            health_classification: value("health_classification"),
+            conclusion_date: value("conclusion_date"),
+            conclusion_by: value("conclusion_by"),
+            conclusion_note: value("conclusion_note"),
+            conclusion_disease_codes: value("conclusion_disease_codes"),
+            status: "Completed",
+          }),
+        });
+        flash("Đã lưu kết luận và hoàn tất lần khám.");
+      }
+      const saveActions = {
+        administrative: saveAdministrative,
+        history: saveHistory,
+        physical: savePhysical,
+        clinical: saveClinical,
+        laboratory: saveLaboratory,
+        conclusion: saveConclusion,
+      };
+      document.querySelector("#history-rows").innerHTML = histories
+        .map(
+          (item, i) =>
+            `<tr><td>${i + 1}</td><td>${item}</td><td class="text-center"><input class="form-check-input" type="radio" name="history_${i + 1}" value="Có" aria-label="Có"></td><td class="text-center"><input class="form-check-input" type="radio" name="history_${i + 1}" value="Không" aria-label="Không"></td></tr>`,
+        )
+        .join("");
+      document.querySelector("#clinical-rows").innerHTML = clinical
+        .map(
+          (item, i) =>
+            `<tr><td>${i + 1}. ${item}</td><td><div class="d-flex align-items-start gap-1"><textarea class="form-control form-control-sm flex-grow-1" name="clinical_${i + 1}" placeholder="Kết quả; phân loại"></textarea><button class="btn btn-outline-success clinical-fill-button flex-shrink-0 fill-normal-row" type="button" title="Điền Bình thường cho dòng này nếu ô kết quả đang trống" aria-label="Điền Bình thường cho ${item} nếu ô kết quả đang trống"><i class="bi bi-magic"></i></button></div></td><td><input class="form-control form-control-sm" name="clinical_doctor_${i + 1}" placeholder="Họ tên / chữ ký"></td></tr>`,
+        )
+        .join("");
+      const biochemicalTable = document.createElement("div");
+      biochemicalTable.className = "mt-3";
+      biochemicalTable.innerHTML = `<h3 class="subheading mt-0">Bảng kết quả sinh hóa máu</h3><div class="table-responsive"><table class="table table-bordered table-sm align-middle biochemical-results-table mb-0"><thead class="table-success"><tr><th style="width:45%">Chỉ số</th><th>Kết quả</th></tr></thead><tbody>${biochemicalAnalytes.map(([, label, field]) => `<tr><th scope="row">${label}</th><td><input class="form-control form-control-sm" type="text" inputmode="decimal" name="${field}" placeholder="Nhập kết quả ${label}"></td></tr>`).join("")}</tbody></table></div>`;
+      const biochemicalNote = $("blood_biochemistry");
+      if (biochemicalNote) {
+        biochemicalNote.placeholder =
+          "Có thể ghi thêm kết quả tổng hợp hoặc chú thích";
+        biochemicalNote.parentElement.appendChild(biochemicalTable);
+      }
+      const hematologyField = $("hematology");
+      const laboratoryRow = biochemicalNote?.closest(".row");
+      const urineHeading =
+        laboratoryRow &&
+        [...laboratoryRow.children].find((column) =>
+          column
+            .querySelector("h3")
+            ?.textContent.includes("b) Xét nghiệm nước tiểu"),
+        );
+      if (hematologyField && urineHeading) {
+        const urineBlock = document.createElement("div");
+        urineBlock.className = "row g-3 mt-3";
+        let urineColumn = urineHeading;
+        for (let index = 0; index < 3 && urineColumn; index += 1) {
+          const nextColumn = urineColumn.nextElementSibling;
+          if (index > 0) {
+            urineColumn.classList.remove("col-md-6");
+            urineColumn.classList.add("col-12");
+          }
+          urineBlock.appendChild(urineColumn);
+          urineColumn = nextColumn;
+        }
+        hematologyField.parentElement.appendChild(urineBlock);
+      }
+      function addQuickNormalButton(anchor, fieldNames, afterLabel = false) {
+        if (!anchor) return;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "btn btn-outline-success quick-normal-button ms-2";
+        button.dataset.fillTargets = fieldNames.join("|");
+        button.title = "Điền Bình thường vào các ô đang trống";
+        button.setAttribute(
+          "aria-label",
+          `Điền Bình thường cho ${anchor.textContent.trim()}`,
+        );
+        button.innerHTML = '<i class="bi bi-magic"></i>';
+        if (afterLabel) anchor.insertAdjacentElement("afterend", button);
+        else anchor.appendChild(button);
+      }
+      const hematologyLabel =
+        $("hematology")?.parentElement.querySelector(".form-label");
+      const urineTestLabel =
+        $("urinalysis")?.parentElement.querySelector(".form-label");
+      const bloodChemistryLabel =
+        $("blood_biochemistry")?.parentElement.querySelector(".form-label");
+      const xrayHeading = [...document.querySelectorAll("#laboratory h3")].find(
+        (item) => item.textContent.includes("c) Chẩn đoán hình ảnh"),
+      );
+      const chemistryFieldNames = [
+        "blood_biochemistry",
+        ...biochemicalAnalytes.map(([, , field]) => field),
+      ];
+      addQuickNormalButton(hematologyLabel, ["hematology"], true);
+      addQuickNormalButton(urineTestLabel, ["urinalysis"], true);
+      addQuickNormalButton(bloodChemistryLabel, chemistryFieldNames, true);
+      addQuickNormalButton(xrayHeading, ["chest_xray"]);
+      document
+        .querySelector("#laboratory")
+        .addEventListener("click", (event) => {
+          const button = event.target.closest(".quick-normal-button");
+          if (!button) return;
+          const fields = button.dataset.fillTargets
+            .split("|")
+            .map((name) => $(name))
+            .filter(Boolean);
+          const emptyFields = fields.filter((field) => !field.value.trim());
+          emptyFields.forEach((field) => {
+            field.value = "Bình thường";
+            field.dispatchEvent(new Event("input", { bubbles: true }));
+            field.dispatchEvent(new Event("change", { bubbles: true }));
+          });
+          flash(
+            emptyFields.length
+              ? `Đã điền “Bình thường” vào ${emptyFields.length} ô trống. Vui lòng rà soát trước khi lưu.`
+              : "Các ô thuộc mục này đã có nội dung; không thay đổi dữ liệu.",
+            emptyFields.length ? "info" : "warning",
+          );
+        });
+      const healthStatusField = $("health_status");
+      const healthStatusLabel =
+        healthStatusField?.parentElement.querySelector(".form-label");
+      if (healthStatusField && healthStatusLabel) {
+        const summaryButton = document.createElement("button");
+        summaryButton.type = "button";
+        summaryButton.id = "summarize-clinical-button";
+        summaryButton.className =
+          "btn btn-outline-primary clinical-summary-button ms-2";
+        summaryButton.title = "Lấy các kết quả khám lâm sàng khác Bình thường";
+        summaryButton.setAttribute(
+          "aria-label",
+          "Tổng hợp kết quả bất thường từ tab Khám lâm sàng",
+        );
+        summaryButton.innerHTML = '<i class="bi bi-arrow-down-circle"></i>';
+        healthStatusLabel.insertAdjacentElement("afterend", summaryButton);
+        summaryButton.addEventListener("click", () => {
+          const summary = [];
+          const addIfAbnormal = (rawValue) => {
+            const result = String(rawValue || "").trim();
+            if (!result || /^bình thường[.!]?$/iu.test(result)) return;
+            summary.push(result);
+          };
+          clinical.forEach((_, index) =>
+            addIfAbnormal(value(`clinical_${index + 1}`)),
+          );
+          [
+            "vision_no_glasses",
+            "vision_glasses",
+            "eye_disease",
+            "hearing_right",
+            "hearing_left",
+            "ent_disease",
+            "upper_jaw",
+            "lower_jaw",
+            "dental_disease",
+          ].forEach((field) => addIfAbnormal(value(field)));
+          [
+            "hematology",
+            "urinalysis",
+            "blood_biochemistry",
+            ...biochemicalAnalytes.map(([, , field]) => field),
+            "chest_xray",
+          ].forEach((field) => addIfAbnormal(value(field)));
+          if (!summary.length) {
+            flash(
+              "Tab Khám lâm sàng chưa có nội dung khác “Bình thường” để tổng hợp.",
+              "info",
+            );
+            return;
+          }
+          const text = summary.join("; ");
+          const current = healthStatusField.value.trim();
+          const previousSummary =
+            healthStatusField.dataset.clinicalSummary || "";
+          if (
+            current &&
+            current !== previousSummary &&
+            current !== text &&
+            !window.confirm(
+              "Ô kết luận đã có nội dung. Bạn có muốn thay bằng kết quả tổng hợp từ tab Khám lâm sàng không?",
+            )
+          )
+            return;
+          healthStatusField.value = text;
+          healthStatusField.dataset.clinicalSummary = text;
+          healthStatusField.dispatchEvent(
+            new Event("input", { bubbles: true }),
+          );
+          healthStatusField.dispatchEvent(
+            new Event("change", { bubbles: true }),
+          );
+          healthStatusField.focus();
+          flash(
+            `Đã tổng hợp ${summary.length} kết quả khác “Bình thường” vào Tình trạng sức khỏe.`,
+            "info",
+          );
+        });
+      }
+      document
+        .querySelector("#clinical-rows")
+        .addEventListener("click", (event) => {
+          const button = event.target.closest(".fill-normal-row");
+          if (!button) return;
+          const field = button
+            .closest("tr")
+            .querySelector('textarea[name^="clinical_"]');
+          if (field.value.trim()) {
+            field.focus();
+            flash("Ô này đã có nội dung nên được giữ nguyên.", "warning");
+            return;
+          }
+          field.value = "Bình thường";
+          field.dispatchEvent(new Event("input", { bubbles: true }));
+          field.dispatchEvent(new Event("change", { bubbles: true }));
+          field.focus();
+        });
+      const extraClinicalFields = [
+        "vision_no_glasses",
+        "vision_glasses",
+        "eye_disease",
+        "hearing_right",
+        "hearing_left",
+        "ent_disease",
+        "upper_jaw",
+        "lower_jaw",
+        "dental_disease",
+      ];
+      extraClinicalFields.forEach((name) => {
+        const field = document.querySelector(`[name="${name}"]`);
+        const label = field?.parentElement.querySelector(".form-label");
+        if (!field || !label) return;
+        label.style.display = "inline-flex";
+        label.style.alignItems = "center";
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className =
+          "btn btn-outline-success clinical-field-fill-button ms-2";
+        button.dataset.fillTarget = name;
+        button.title = "Điền Bình thường nếu ô đang trống";
+        button.setAttribute(
+          "aria-label",
+          `Điền Bình thường cho ${label.textContent.trim()} nếu ô đang trống`,
+        );
+        button.innerHTML = '<i class="bi bi-magic"></i>';
+        label.insertAdjacentElement("afterend", button);
+      });
+      document.querySelector("#clinical").addEventListener("click", (event) => {
+        const button = event.target.closest(".clinical-field-fill-button");
+        if (!button) return;
+        const field = document.querySelector(
+          `[name="${button.dataset.fillTarget}"]`,
+        );
+        if (!field || field.value.trim()) {
+          field?.focus();
+          flash("Ô này đã có nội dung nên được giữ nguyên.", "warning");
+          return;
+        }
+        field.value = "Bình thường";
+        field.dispatchEvent(new Event("input", { bubbles: true }));
+        field.dispatchEvent(new Event("change", { bubbles: true }));
+        field.focus();
+      });
+      document
+        .querySelector("#fill-normal-clinical")
+        .addEventListener("click", () => {
+          const emptyFields = [
+            ...document.querySelectorAll(
+              '#clinical-rows textarea[name^="clinical_"]',
+            ),
+          ].filter((field) => !field.value.trim());
+          emptyFields.forEach((field) => {
+            field.value = "Bình thường";
+            field.dispatchEvent(new Event("input", { bubbles: true }));
+            field.dispatchEvent(new Event("change", { bubbles: true }));
+          });
+          flash(
+            emptyFields.length
+              ? `Đã điền “Bình thường” vào ${emptyFields.length} ô trống. Vui lòng rà soát trước khi lưu.`
+              : "Các ô kết quả đã có nội dung; không thay đổi dữ liệu.",
+            emptyFields.length ? "info" : "warning",
+          );
+        });
+      Object.entries({
+        administrative: "Lưu thông tin hành chính",
+        history: "Lưu tiền sử bệnh",
+        physical: "Lưu khám thể lực",
+        clinical: "Lưu khám lâm sàng",
+        laboratory: "Lưu cận lâm sàng",
+        conclusion: "Lưu kết luận",
+      }).forEach(([step, label]) => {
+        const backButton =
+          step === "administrative"
+            ? '<button id="back-to-list-administrative" type="button" class="btn btn-outline-secondary me-2"><i class="bi bi-arrow-left"></i> Quay lại danh sách</button>'
+            : "";
+        const a4Button =
+          step === "administrative"
+            ? '<button id="download-word-a4-after-save" type="button" class="btn btn-outline-primary me-2" data-default-label="<i class=&quot;bi bi-file-earmark-word&quot;></i> Tải phiếu A4"><i class="bi bi-file-earmark-word"></i> Tải phiếu A4</button>'
+            : "";
+        const examDateInput =
+          step === "administrative"
+            ? '<label class="d-inline-flex align-items-center gap-2 me-2 mb-0"><span class="form-label mb-0">Ngày khám</span><input id="exam_date" name="exam_date" type="text" class="form-control" style="width: 130px" inputmode="numeric" placeholder="dd/mm/yyyy" autocomplete="off" required></label>'
+            : "";
+        const conclusionA4Button =
+          step === "conclusion"
+            ? '<button id="save-and-download-a4-conclusion" type="button" class="btn btn-outline-primary ms-2" data-default-label="<i class=&quot;bi bi-file-earmark-word&quot;></i> Lưu và Tải phiếu A4"><i class="bi bi-file-earmark-word"></i> Lưu và Tải phiếu A4</button>'
+            : "";
+        document
+          .querySelector(`#${step} .card-body`)
+          .insertAdjacentHTML(
+            "beforeend",
+            `<div class="mt-4 d-flex flex-wrap justify-content-end align-items-center gap-2 no-print">${backButton}${a4Button}<button type="button" class="btn btn-success save-step" data-step="${step}">${label}</button>${examDateInput}${conclusionA4Button}</div>`,
+          );
+      });
+      $("exam_date").value = localDateInputValue();
+      $("exam_date").addEventListener("input", validateExamDateInput);
+      document.addEventListener("click", async (event) => {
+        const button = event.target.closest(".save-step");
+        if (!button) return;
+        button.disabled = true;
+        const label = button.textContent;
+        button.innerHTML =
+          '<span class="spinner-border spinner-border-sm me-1"></span>Đang lưu';
+        try {
+          await saveActions[button.dataset.step]();
+        } catch (error) {
+          flash(error.message, "danger");
+        } finally {
+          button.disabled = false;
+          button.textContent = label;
+        }
+      });
+      document
+        .querySelector("#new_patient_company")
+        .addEventListener("change", async (event) => {
+          if (!isNewPatientRequest()) return;
+          try {
+            await loadNewPatientCampaigns(event.target.value);
+            delete state.examId;
+            delete state.campaignId;
+            persist();
+          } catch (error) {
+            flash(error.message, "danger");
+          }
+        });
+      $("campaign_id").addEventListener("change", async () => {
+        try {
+          await loadExamForCampaign();
+        } catch (error) {
+          flash(error.message, "danger");
+        }
+      });
+      $("province").addEventListener("change", async () => {
+        try {
+          await loadAdministrativeWards(value("province"));
+        } catch (error) {
+          flash(
+            `Không tải được danh mục Phường/Xã: ${error.message}`,
+            "danger",
+          );
+        }
+      });
+      $("birth_date").addEventListener("change", updateAge);
+      document
+        .querySelector("#download-word-button")
+        .addEventListener("click", downloadExamWord);
+      document
+        .querySelector("#download-word-a4-button")
+        .addEventListener("click", () => downloadExamWord("a4"));
+      document
+        .querySelector("#download-word-a4-after-save")
+        .addEventListener("click", async (event) => {
+          const button = event.currentTarget;
+          button.disabled = true;
+          button.innerHTML =
+            '<span class="spinner-border spinner-border-sm me-1"></span>Đang lưu thông tin…';
+          try {
+            const saved = await saveAdministrative();
+            if (saved === false) {
+              button.disabled = false;
+              button.innerHTML = button.dataset.defaultLabel;
+              return;
+            }
+            await downloadExamWord("a4", button);
+          } catch (error) {
+            flash(error.message, "danger");
+            button.disabled = false;
+            button.innerHTML = button.dataset.defaultLabel;
+          }
+        });
+      document
+        .querySelector("#save-and-download-a4-conclusion")
+        .addEventListener("click", async (event) => {
+          const button = event.currentTarget;
+          button.disabled = true;
+          button.innerHTML =
+            '<span class="spinner-border spinner-border-sm me-1"></span>Đang lưu kết luận…';
+          try {
+            const saved = await saveConclusion();
+            if (saved === false) {
+              button.disabled = false;
+              button.innerHTML = button.dataset.defaultLabel;
+              return;
+            }
+            await downloadExamWord("a4-conclusion", button);
+          } catch (error) {
+            flash(error.message, "danger");
+            button.disabled = false;
+            button.innerHTML = button.dataset.defaultLabel;
+          }
+        });
+      document
+        .querySelector("#download-word-photo-button")
+        .addEventListener("click", () => downloadExamWord("photo"));
+      document
+        .querySelector("#back-to-list-button")
+        .addEventListener("click", backToPatientList);
+      document
+        .querySelector("#back-to-list-administrative")
+        .addEventListener("click", backToPatientList);
+      document
+        .querySelector("#parse_qr_button")
+        .addEventListener("click", parseCitizenQr);
+      document
+        .querySelector("#qr_scan_data")
+        .addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            parseCitizenQr();
+          }
+        });
+      document.querySelector("#qr_scan_data").addEventListener("change", () => {
+        if (/[|}¦]/.test(document.querySelector("#qr_scan_data").value))
+          parseCitizenQr();
+      });
+      $("height").addEventListener("input", updateBmi);
+      $("weight").addEventListener("input", updateBmi);
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        saveConclusion().catch((error) => flash(error.message, "danger"));
+      });
+      if (
+        isNewPatientRequest() ||
+        urlPatientId() ||
+        (urlPatientIdentifiers().shs && urlPatientIdentifiers().mst)
+      )
+        loadPatientFromUrl();
+      else
+        loadAdministrativeAddress().catch((error) =>
+          flash(
+            `Không tải được danh mục địa chỉ. Hãy triển khai migration danh mục hành chính: ${error.message}`,
+            "danger",
+          ),
+        );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Danh mục đợt khám</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="menu.css" rel="stylesheet">
+  <style>
+    body { background: #f4f7f6; }
+    .shell { max-width: 1100px; }
+    .hero { background: linear-gradient(135deg, #064b33, #158154); color: #fff; }
+    .card { border: 0; box-shadow: 0 .2rem 1.2rem rgba(18, 65, 45, .08); }
+  </style>
+</head>
+<body>
+  <div data-app-menu="campaign"></div>
+  <header class="hero py-4 mb-4"><div class="container shell d-flex justify-content-between align-items-center gap-3"><div><div class="small opacity-75">Khám sức khỏe</div><h1 class="h3 mb-0">Danh mục đợt khám</h1></div><a class="btn btn-light" href="import.html">Nhập Excel</a></div></header>
+  <main class="container shell pb-5">
+    <section class="card"><div class="card-body p-md-4">
+      <div class="row g-2 align-items-end mb-4">
+        <div class="col-md-7"><label for="company-filter" class="form-label">Đơn vị</label><select id="company-filter" class="form-select"><option value="">-- Chọn đơn vị --</option></select></div>
+        <div class="col-md-3"><button id="refresh" class="btn btn-outline-secondary w-100" type="button">Tải lại</button></div>
+        <div class="col-md-2"><a id="add" class="btn btn-success w-100 disabled" href="editCampaign.html">Thêm đợt</a></div>
+      </div>
+      <div id="status" class="small text-secondary mb-3"></div>
+      <div class="table-responsive border rounded"><table class="table table-hover align-middle mb-0"><thead class="table-success"><tr><th>Tên đợt khám</th><th>Bắt đầu</th><th>Kết thúc</th><th>Số hồ sơ</th><th>Trạng thái</th><th>Mô tả</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div></section>
+  </main>
+  <script src="menu-loader.js"></script>
+  <script>
+    const API = `${location.protocol === 'http:' ? location.origin : 'http://localhost:5500'}/api/v1`;
+    const el = id => document.getElementById(id);
+    const esc = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+    const date = value => value ? value.split('-').reverse().join('/') : '';
+    let companiesById = new Map();
+    async function get(path) { const response = await fetch(`${API}${path}`); const data = await response.json(); if (!response.ok) throw new Error(data.detail || `Lỗi API (${response.status})`); return data; }
+    async function loadCompanies() {
+      const select = el('company-filter');
+      try {
+        const companies = await get('/companies?limit=500');
+        companiesById = new Map(companies.map(company => [String(company.company_id), company]));
+        select.innerHTML = '<option value="">-- Chọn đơn vị --</option>' + companies.map(company => `<option value="${company.company_id}">${esc(company.name)}${company.mst ? ` — MST: ${esc(company.mst)}` : ''}</option>`).join('');
+        const initial = new URLSearchParams(location.search).get('CompanyId');
+        if (initial && companies.some(company => String(company.company_id) === initial)) select.value = initial;
+      } catch (error) { el('status').textContent = error.message; }
+    }
+    async function loadCampaigns() {
+      const companyId = el('company-filter').value;
+      el('add').classList.toggle('disabled', !companyId);
+      el('add').href = companyId ? `editCampaign.html?CompanyId=${encodeURIComponent(companyId)}` : 'editCampaign.html';
+      if (!companyId) { el('rows').innerHTML = '<tr><td colspan="7" class="text-center text-secondary py-4">Chọn đơn vị để xem các đợt khám.</td></tr>'; el('status').textContent = ''; return; }
+      el('status').textContent = 'Đang tải dữ liệu…';
+      try {
+        const [data, countRows] = await Promise.all([
+          get(`/exam-campaigns?company_id=${encodeURIComponent(companyId)}`),
+          get(`/exam-campaigns/patient-counts?company_id=${encodeURIComponent(companyId)}`),
+        ]);
+        const patientCounts = new Map(countRows.map(row => [String(row.campaign_id), row.patient_count]));
+        el('status').textContent = `Có ${data.length} đợt khám.`;
+        el('rows').innerHTML = data.length ? data.map(item => `<tr><td class="fw-semibold">${esc(item.campaign_name)}</td><td>${date(item.start_date)}</td><td>${date(item.end_date)}</td><td class="text-end">${patientCounts.get(String(item.campaign_id)) ?? 0}</td><td><span class="badge text-bg-${item.is_active ? 'success' : 'secondary'}">${item.is_active ? 'Đang dùng' : 'Ngừng dùng'}</span></td><td>${esc(item.description)}</td><td><a class="btn btn-sm btn-outline-success" href="editCampaign.html?CampaignId=${item.campaign_id}">Sửa</a></td></tr>`).join('') : '<tr><td colspan="7" class="text-center text-secondary py-4">Chưa có đợt khám.</td></tr>';
+        const company = companiesById.get(String(companyId));
+        data.forEach((item, index) => {
+          const cell = el('rows').rows[index]?.cells[0];
+          if (!cell) return;
+          const link = document.createElement('a');
+          link.href = `list.html?MST=${encodeURIComponent(company?.mst ?? '')}&CampaignId=${encodeURIComponent(item.campaign_id)}`;
+          link.textContent = item.campaign_name ?? '';
+          link.className = 'text-decoration-none';
+          cell.replaceChildren(link);
+        });
+      } catch (error) { el('status').innerHTML = `<span class="text-danger">${esc(error.message)}</span>`; }
+    }
+    el('company-filter').addEventListener('change', loadCampaigns);
+    el('refresh').addEventListener('click', loadCampaigns);
+    (async () => { await loadCompanies(); await loadCampaigns(); })();
+  </script>
+</body>
+</html>

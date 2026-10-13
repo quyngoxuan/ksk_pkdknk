@@ -1,0 +1,161 @@
+.\.venv\Scripts\python.exe -m pip install --upgrade pipHƯỚNG DẪN CÀI ĐẶT KSK_API TRÊN MÁY WINDOWS MỚI
+================================================
+
+Tài liệu này cài API FastAPI và các trang HTML cùng máy. Ví dụ thư mục cài:
+C:\PKNK_KSK\
+
+QUAN TRỌNG VỀ BẢO MẬT
+- Không đưa mật khẩu SQL, mật khẩu HSSK, KSK_BATCH_API_KEY, PIN USB Token hoặc private key vào tài liệu này, mã nguồn, email/chat hay Git.
+- Chỉ người quản trị được cấp quyền đọc KSK_API\.env.
+- Chỉ mở cổng API cho mạng nội bộ cần thiết; không public trực tiếp Internet.
+- Máy chạy API không cần cắm USB Token. Token phải ở máy desktop dùng TOOL_LIENTHONG để ký.
+
+1. CHUẨN BỊ MÁY VÀ MÃ NGUỒN
+---------------------------
+1. Dùng máy Windows 10/11 hoặc Windows Server được đơn vị hỗ trợ, cập nhật bản vá.
+2. Cài Python 3.10 x64 trở lên và bật tùy chọn Python Launcher (py.exe).
+3. Cài Microsoft ODBC Driver 17 hoặc 18 for SQL Server (khuyến nghị driver còn được Microsoft hỗ trợ). Không cài Native Client 11 trên máy mới trừ khi hệ thống bắt buộc.
+4. Chép toàn bộ thư mục dự án vào C:\PKNK_KSK, không chỉ riêng KSK_API. Cần giữ các file migration deploy_*.sql ở thư mục gốc.
+5. Bảo đảm máy nhìn thấy SQL Server instance PKNK qua mạng. DBA cần cho phép TCP/IP và firewall SQL Server đúng cổng; SQL Server named instance có thể dùng cổng động. Ưu tiên cấu hình cổng TCP cố định với DBA.
+
+2. KIỂM TRA VÀ TẠO CẤU TRÚC DATABASE
+------------------------------------
+Database đích là PKNK_KSK trên SQL Server. Trước khi chạy migration, DBA phải xác nhận database đã được backup và tài khoản SQL có quyền tạo/sửa bảng.
+
+Nếu database đã có dữ liệu và schema KSK đang chạy, chỉ áp migration batch mới:
+  cd C:\PKNK_KSK
+  .\KSK_API\.venv\Scripts\python.exe .\KSK_API\tools\deploy_lienthong_batch.py
+
+Nếu cài mới database trống, DBA chạy lần lượt bằng SQL Server Management Studio (SSMS), chọn đúng database PKNK_KSK:
+  1. deploy_ksk_schema.sql          (Patients, HealthExams và các bảng kết quả)
+  2. deploy_patients_mst.sql
+  3. deploy_patients_shs.sql
+  4. deploy_companys.sql
+  5. deploy_exam_campaigns.sql
+  6. deploy_ksk_lienthong_2062.sql
+  7. deploy_admin_catalog_2025.sql
+  8. deploy_lienthong_batch.sql
+
+Chỉ chạy các migration nền nếu database chưa có bảng tương ứng. Script batch có thể chạy lại an toàn. Không chạy migration trên database khác PKNK_KSK.
+
+3. CẤU HÌNH FILE .ENV
+---------------------
+Mở PowerShell:
+  cd C:\PKNK_KSK\KSK_API
+  Copy-Item .env.example .env
+
+Nếu .env đã tồn tại thì KHÔNG chạy Copy-Item đè lên. Mở .env bằng Notepad/VS Code và khai báo giá trị thật tại máy cài đặt:
+
+  APP_NAME=KSK API
+  APP_ENV=production
+  SQL_SERVER=TEN-MAY\TEN-INSTANCE
+  SQL_DATABASE=PKNK_KSK
+  SQL_USERNAME=<tài khoản SQL do DBA cấp riêng>
+  SQL_PASSWORD=<mật khẩu SQL>
+  SQL_DRIVER=ODBC Driver 17 for SQL Server
+  SQL_TRUST_SERVER_CERTIFICATE=yes
+  CORS_ORIGINS=http://localhost:5500,http://127.0.0.1:5500
+
+Thay SQL_SERVER bằng hostname\instance thật. Nếu dùng ODBC Driver 18, đổi SQL_DRIVER thành đúng tên driver đã cài. Không dùng mật khẩu sa nếu DBA có thể cấp tài khoản riêng chỉ đủ quyền ứng dụng.
+
+Thiết lập liên thông theo thông tin cơ sở được cấp, không tự lấy giá trị ví dụ từ máy phát triển:
+  LIEN_THONG_BASE_URL=https://api-hssk.hanoi.gov.vn
+  LIEN_THONG_USERNAME=<tài khoản được cấp>
+  LIEN_THONG_PASSWORD=<mật khẩu được cấp>
+  LIEN_THONG_SENDER_ID=<sender id được cấp>
+  LIEN_THONG_RECEIVER_ID=<receiver id được xác nhận>
+  LIEN_THONG_VERSION=1.0
+  LIEN_THONG_TIMEOUT_SECONDS=30
+  LIEN_THONG_BATCH_RETENTION_DAYS=90
+
+Sinh khóa batch ngẫu nhiên dài (không dùng chuỗi dễ đoán như tên đơn vị/năm):
+  .\.venv\Scripts\python.exe -c "import secrets; print(secrets.token_urlsafe(48))"
+
+Đặt kết quả vào .env:
+  KSK_BATCH_API_KEY=<chuỗi ngẫu nhiên vừa sinh>
+
+Nhập cùng KSK_BATCH_API_KEY vào TOOL_LIENTHONG > Cấu hình API > Batch API key trên từng máy ký. Ứng dụng desktop lưu khóa được mã hóa theo tài khoản Windows bằng DPAPI. Nếu API dùng HTTPS từ máy khác, phải dùng chứng thư TLS hợp lệ; không gửi batch key qua HTTP trên mạng LAN.
+
+Nếu XML cần cấu hình mã cơ sở, GLN hoặc chữ ký Base64 của người kết luận/cơ sở, khai báo đúng các biến đã có trong .env.example / LIEN_THONG_SETUP.md. Không đưa private key hoặc PIN Token lên API server.
+
+4. TẠO MÔI TRƯỜNG PYTHON VÀ CÀI THƯ VIỆN
+----------------------------------------
+Mở PowerShell (không cần quyền Administrator nếu cài trong thư mục được phép):
+  cd C:\PKNK_KSK\KSK_API
+  py -3.10 -m venv .venv
+  .\.venv\Scripts\python.exe -m pip install --upgrade pip
+  .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+Nếu Python mới hơn được đơn vị kiểm thử hỗ trợ thì dùng launcher tương ứng, ví dụ py -3.12. Không dùng Python 32-bit với ODBC driver x64.
+
+5. KIỂM TRA KẾT NỐI VÀ CHẠY MIGRATION
+-------------------------------------
+1. Kiểm tra driver SQL Server đã cài đúng kiến trúc 64-bit.
+2. Nếu database chưa có dữ liệu danh mục tỉnh/xã, chạy:
+  cd C:\PKNK_KSK\KSK_API
+  .\.venv\Scripts\python.exe tools\deploy_admin_catalog.py
+3. Tạo bảng batch nếu chưa có:
+  .\.venv\Scripts\python.exe tools\deploy_lienthong_batch.py
+4. Nếu kết nối báo lỗi, kiểm tra lần lượt hostname/instance, TCP/IP, cổng SQL, firewall, SQL authentication, username/password, ODBC driver và quyền database. Không dán mật khẩu vào ticket/log.
+
+6. CHẠY THỬ API
+---------------
+Chạy trước ở cửa sổ PowerShell để xem log:
+  cd C:\PKNK_KSK\KSK_API
+  .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 5500
+
+Hoặc nhấp đúp file C:\PKNK_KSK\KSK_API\start_api.bat. File này tự vào đúng thư mục,
+kiểm tra .venv và chạy API production trên cổng 5500 (không dùng --reload).
+
+Kiểm tra ngay trên máy cài:
+  http://localhost:5500/health
+  http://localhost:5500/docs
+  http://localhost:5500/openapi.json
+  http://localhost:5500/main.html
+
+Nếu /health không thành công, xử lý kết nối SQL trước. Nếu port 5500 đã được dùng, kiểm tra tiến trình đang giữ cổng thay vì khởi chạy thêm uvicorn. Dừng chế độ thử bằng Ctrl+C.
+
+Từ máy trạm trong LAN, thử http://TEN-MAY-API:5500/health. Chỉ làm bước này nếu firewall đã giới hạn nguồn truy cập trong mạng nội bộ. CORS_ORIGINS phải khớp chính xác origin trình duyệt thực tế; CORS không thay thế firewall hay xác thực.
+
+7. CÀI CHẠY SAU KHI KHỞI ĐỘNG LẠI WINDOWS
+-------------------------------------------
+Không dùng --reload trên máy vận hành. Cách đơn giản là Task Scheduler:
+1. Mở Task Scheduler > Create Task.
+2. Chọn tài khoản dịch vụ Windows có quyền đọc C:\PKNK_KSK\KSK_API\.env và truy cập SQL Server.
+3. Chọn Run whether user is logged on or not; đặt trigger At startup; bật Restart on failure.
+4. Action: Start a program.
+   Program/script: C:\PKNK_KSK\KSK_API\.venv\Scripts\python.exe
+   Add arguments: -m uvicorn app.main:app --host 0.0.0.0 --port 5500
+   Start in: C:\PKNK_KSK\KSK_API
+5. Lưu task, khởi động task và kiểm tra /health, /docs. Cấu hình log/giám sát và tài khoản dịch vụ theo chính sách IT.
+
+Nếu chỉ dùng ứng dụng trên cùng máy, có thể bind API vào 127.0.0.1 thay 0.0.0.0. Nếu phục vụ máy khác, giới hạn Windows Firewall chỉ các IP/subnet nội bộ được phép; production nên đặt reverse proxy HTTPS trước API thay vì truyền thông tin nhạy cảm qua HTTP.
+
+8. CẬP NHẬT VÀ SAO LƯU
+----------------------
+- Backup database trước mỗi migration; lưu bản sao .env ở nơi secrets được mã hóa, không đặt chung vào Git/thư mục chia sẻ.
+- Khi cập nhật code: dừng task API, sao lưu, cập nhật source, cài requirements nếu thay đổi, chạy migration mới có kiểm soát, khởi động lại và kiểm tra /health cùng /docs.
+- Không xóa .venv, .env hay thư mục dữ liệu nếu chưa có backup và phê duyệt.
+- Lập lịch backup SQL Server; phân quyền dữ liệu sức khỏe theo nguyên tắc tối thiểu cần thiết.
+
+9. LỖI THƯỜNG GẶP
+------------------
+- ModuleNotFoundError: No module named 'pydantic_core._pydantic_core': môi trường .venv được tạo/cài dở dang hoặc không khớp phiên bản Python. Thực hiện đúng thứ tự sau trong PowerShell (đóng mọi API đang chạy trước khi xóa .venv):
+  cd C:\PKNK_KSK\KSK_API
+  py -0p
+  Remove-Item -LiteralPath .venv -Recurse -Force
+  py -3.10 -m venv .venv
+  .\.venv\Scripts\python.exe -m pip install --upgrade pip
+  .\.venv\Scripts\python.exe -m pip install --no-cache-dir -r requirements.txt
+  .\.venv\Scripts\python.exe --version
+  .\.venv\Scripts\python.exe -c "import fastapi, pydantic_core; print('FastAPI va pydantic_core OK')"
+  .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 5500
+  Dùng Python 3.10 x64 theo hướng dẫn cài đặt; không dùng .venv đã chép từ máy khác, và không chạy lệnh uvicorn trước lệnh cd. Nếu `py -3.10` không có, cài Python 3.10 x64 rồi mở PowerShell mới.
+- Address already in use / WinError 10048: đã có tiến trình chiếm cổng 5500. Không chạy thêm bản uvicorn thứ hai.
+- SQL Server Network Interfaces / timeout: kiểm tra instance, DNS, SQL TCP/IP, port cố định, firewall và tài khoản SQL.
+- Data source name not found: cài ODBC Driver 17/18 đúng x64 và đặt SQL_DRIVER khớp chính xác.
+- 401/403 khi gọi API batch: KSK_BATCH_API_KEY trên .env và trong cấu hình desktop phải giống nhau; khởi động lại API sau khi đổi .env.
+- Thiếu bảng/table invalid: xác nhận đang vào đúng PKNK_KSK và chạy migration theo thứ tự ở bước 2.
+- Không gửi được HSSK: kiểm tra endpoint, tài khoản liên thông, sender/receiver ID và response trong API log; không thử gửi lại hồ sơ Uncertain trước khi đối soát với cổng.
+
+Khi cần hỗ trợ, chỉ gửi mã lỗi và log đã loại bỏ mật khẩu, access token, batch key, dữ liệu định danh và nội dung sức khỏe.
